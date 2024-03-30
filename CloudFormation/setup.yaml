@@ -1,0 +1,261 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Setup for Distributed Blockchain Experiment with Requestor and Responder Lambda Functions
+
+Resources:
+  ##########################
+  ##   Lambda Functions   ##
+  ##########################
+
+  RequestorFunction1:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt RequestorLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: requestor.zip
+      Environment:
+        Variables:
+          DATA_READY_TOPIC_ARN: !Ref DataReadyTopic
+          DDB_TABLE_NAME: !Ref MyDynamoDBTable
+          ID: 1
+
+  RequestorFunction2:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt RequestorLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: requestor.zip
+      Environment:
+        Variables:
+          DATA_READY_TOPIC_ARN: !Ref DataReadyTopic
+          DDB_TABLE_NAME: !Ref MyDynamoDBTable
+          ID: 2          
+  
+  ResponderFunction1:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DATA_READY_TOPIC_ARN: !Ref DataReadyTopic
+          DDB_TABLE_NAME: !Ref MyDynamoDBTable
+          ID: 1
+
+  ###################
+  ##   SNS Topic   ##
+  ###################
+  SNSTopic:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Topic
+      TopicName: Topic
+  
+  DataReadyTopic:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: DataReadyTopic
+      TopicName: DataReadyTopic
+  
+  BlockRequestTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: BlockRequestTopic
+      TopicName: BlockRequestTopic
+
+  ResponseBlockTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: ResponseBlockTopic
+      TopicName: ResponseBlockTopic
+  
+
+  ###################
+  ##  SQS Queues   ##
+  ###################
+  ColorQueue:
+    Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: ColorQueue
+      RedrivePolicy: 
+        deadLetterTargetArn: !GetAtt ColorDLQueue.Arn
+        maxReceiveCount: 5
+  
+  ResponderQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ResponderQueue
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt ResponderDLQueue.Arn
+        maxReceiveCount: 5
+  ###################
+  ## SQS DL Queues ##
+  ###################
+  ColorDLQueue:
+    Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: ColorDLQueue
+  
+  ResponderDLQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ResponderDLQueue
+  #############################
+  ##   SQS Access Policies   ##
+  #############################
+  # allows SNS Topic to publish to the queues
+  QueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref ColorQueue
+        - !Ref ResponderQueue
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Action:
+              - sqs:SendMessage
+            Resource: "*"
+            Condition:
+              ArnEquals: 
+                aws:SourceArn:
+                  !Ref SNSTopic
+
+  QueuePolicyResponder:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref ResponderQueue
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Action: sqs:SendMessage
+            Resource: !GetAtt ResponderQueue.Arn
+            Condition:
+              ArnEquals: 
+                aws:SourceArn: 
+                  !Ref DataReadyTopic
+
+  ###########################
+  ##   SNS Subscriptions   ##
+  ###########################
+  RequestorSNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref DataReadyTopic
+      Endpoint: !GetAtt RequestorFunction.Arn
+  ###########################
+  ##   SNS Filter Policy   ##
+  ###########################
+  ColorQueueSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: !GetAtt ColorQueue.Arn
+      Protocol: sqs
+      RawMessageDelivery: True
+      TopicArn: !Ref SNSTopic
+  
+  SNS2SQSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: !GetAtt ResponderQueue.Arn
+      Protocol: sqs
+      RawMessageDelivery: True   
+      TopicArn: !Ref DataReadyTopic
+
+
+###############
+###DynamoDB####
+###############
+
+  MyDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Blocks
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: "ID"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "ID"
+          KeyType: "HASH"
+
+
+    
+
+### POLICIES
+
+  RequestorLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: RequestorLambdaPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                  - 'sns:Subscribe'
+                  - 'sqs:SendMessage'
+                  - 'sqs:ReceiveMessage'
+                  - 'sqs:DeleteMessage'
+                  - 'sqs:GetQueueAttributes'
+                  - 'sns:Publish'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                  - 'dynamodb:Scan'
+                  - 'dynamodb:Query'
+                Resource: '*'
+
+  ResponderLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: ResponderLambdaPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:PutObject'
+                  - 'sns:Publish'
+                  - 'sqs:SendMessage'
+                  - 'sqs:ReceiveMessage'
+                  - 'sqs:DeleteMessage'
+                  - 'sqs:GetQueueAttributes'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                  - 'dynamodb:Scan'
+                  - 'dynamodb:Query'
+                Resource: '*'
