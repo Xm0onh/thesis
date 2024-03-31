@@ -20,21 +20,6 @@ Resources:
           DATA_READY_TOPIC_ARN: !Ref DataReadyTopic
           DDB_TABLE_NAME: !Ref MyDynamoDBTable
           ID: 1
-
-  RequestorFunction2:
-    Type: 'AWS::Lambda::Function'
-    Properties:
-      Handler: main
-      Runtime: provided.al2023
-      Role: !GetAtt RequestorLambdaExecutionRole.Arn
-      Code:
-        S3Bucket: thesisubc
-        S3Key: requestor.zip
-      Environment:
-        Variables:
-          DATA_READY_TOPIC_ARN: !Ref DataReadyTopic
-          DDB_TABLE_NAME: !Ref MyDynamoDBTable
-          ID: 2          
   
   ResponderFunction1:
     Type: 'AWS::Lambda::Function'
@@ -54,12 +39,6 @@ Resources:
   ###################
   ##   SNS Topic   ##
   ###################
-  SNSTopic:
-    Type: AWS::SNS::Topic
-    Properties: 
-      DisplayName: Topic
-      TopicName: Topic
-  
   DataReadyTopic:
     Type: AWS::SNS::Topic
     Properties: 
@@ -82,14 +61,6 @@ Resources:
   ###################
   ##  SQS Queues   ##
   ###################
-  ColorQueue:
-    Type: AWS::SQS::Queue
-    Properties: 
-      QueueName: ColorQueue
-      RedrivePolicy: 
-        deadLetterTargetArn: !GetAtt ColorDLQueue.Arn
-        maxReceiveCount: 5
-  
   ResponderQueue:
     Type: AWS::SQS::Queue
     Properties:
@@ -100,11 +71,6 @@ Resources:
   ###################
   ## SQS DL Queues ##
   ###################
-  ColorDLQueue:
-    Type: AWS::SQS::Queue
-    Properties: 
-      QueueName: ColorDLQueue
-  
   ResponderDLQueue:
     Type: AWS::SQS::Queue
     Properties:
@@ -113,25 +79,6 @@ Resources:
   ##   SQS Access Policies   ##
   #############################
   # allows SNS Topic to publish to the queues
-  QueuePolicy:
-    Type: AWS::SQS::QueuePolicy
-    Properties:
-      Queues:
-        - !Ref ColorQueue
-        - !Ref ResponderQueue
-      PolicyDocument:
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: sns.amazonaws.com
-            Action:
-              - sqs:SendMessage
-            Resource: "*"
-            Condition:
-              ArnEquals: 
-                aws:SourceArn:
-                  !Ref SNSTopic
-
   QueuePolicyResponder:
     Type: AWS::SQS::QueuePolicy
     Properties:
@@ -152,23 +99,31 @@ Resources:
   ###########################
   ##   SNS Subscriptions   ##
   ###########################
-  RequestorSNSSubscription:
+  
+  Requestor1SNSSubscription:
     Type: AWS::SNS::Subscription
     Properties:
       Protocol: lambda
       TopicArn: !Ref DataReadyTopic
-      Endpoint: !GetAtt RequestorFunction.Arn
+      Endpoint: !GetAtt RequestorFunction1.Arn
+
+  Responder1SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref DataReadyTopic
+      Endpoint: !GetAtt ResponderFunction1.Arn
+
+  # Requestor2SNSSubscription:
+  #   Type: AWS::SNS::Subscription
+  #   Properties:
+  #     Protocol: lambda
+  #     TopicArn: !Ref DataReadyTopic
+  #     Endpoint: !GetAtt RequestorFunction2.Arn
+
   ###########################
   ##   SNS Filter Policy   ##
   ###########################
-  ColorQueueSubscription:
-    Type: AWS::SNS::Subscription
-    Properties:
-      Endpoint: !GetAtt ColorQueue.Arn
-      Protocol: sqs
-      RawMessageDelivery: True
-      TopicArn: !Ref SNSTopic
-  
   SNS2SQSSubscription:
     Type: AWS::SNS::Subscription
     Properties:
@@ -228,6 +183,9 @@ Resources:
                   - 'dynamodb:UpdateItem'
                   - 'dynamodb:Scan'
                   - 'dynamodb:Query'
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
                 Resource: '*'
 
   ResponderLambdaExecutionRole:
@@ -258,4 +216,7 @@ Resources:
                   - 'dynamodb:UpdateItem'
                   - 'dynamodb:Scan'
                   - 'dynamodb:Query'
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
                 Resource: '*'

@@ -18,7 +18,8 @@ import (
 )
 
 type BlockRequest struct {
-	BlockNumber int `json:"blockNumber"`
+	BlockNumber int    `json:"blockNumber"`
+	RequestorID string `json:"requestorID"`
 }
 
 type BlockData struct {
@@ -34,7 +35,9 @@ func HandleRequest(ctx context.Context, event json.RawMessage) (string, error) {
 	}
 
 	var blockRequest BlockRequest
-	if err := json.Unmarshal(event, &blockRequest); err != nil {
+	err := json.Unmarshal(event, &blockRequest)
+
+	if err != nil {
 		return handleRequestInitiation(ctx, blockRequest)
 	}
 
@@ -50,7 +53,7 @@ func handleResponseProcessing(ctx context.Context, snsEvent events.SNSEvent) (st
 	ddbClient := dynamodb.NewFromConfig(cfg)
 
 	for _, record := range snsEvent.Records {
-		var blockData BlockData
+		var blockData BlockRequest
 		err := json.Unmarshal([]byte(record.SNS.Message), &blockData)
 		if err != nil {
 			return "Failed to unmarshal block data", err
@@ -59,6 +62,7 @@ func handleResponseProcessing(ctx context.Context, snsEvent events.SNSEvent) (st
 		out, err := ddbClient.GetItem(ctx, &dynamodb.GetItemInput{
 			TableName: aws.String(os.Getenv("DDB_TABLE_NAME")),
 			Key: map[string]types.AttributeValue{
+				"ID":          &types.AttributeValueMemberS{Value: blockData.RequestorID},
 				"BlockNumber": &types.AttributeValueMemberN{Value: strconv.Itoa(blockData.BlockNumber)},
 			},
 		})
@@ -79,6 +83,7 @@ func handleResponseProcessing(ctx context.Context, snsEvent events.SNSEvent) (st
 }
 
 func handleRequestInitiation(ctx context.Context, blockRequest BlockRequest) (string, error) {
+
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		return "Failed to marshal request message", err
@@ -103,38 +108,3 @@ func handleRequestInitiation(ctx context.Context, blockRequest BlockRequest) (st
 func main() {
 	lambda.Start(HandleRequest)
 }
-
-// type Event struct {
-// 	ID     int `json:"id"`
-// 	Number int `json:"number"`
-// }
-
-// type BlockRequest struct {
-// 	ID int `json:"id"`
-// }
-
-// func HandleRequest(ctx context.Context, event Event) (string, error) {
-// 	cfg, err := config.LoadDefaultConfig(ctx)
-// 	if err != nil {
-// 		return "", err
-// 	}
-
-// 	snsClient := sns.NewFromConfig(cfg)
-// 	topicArn := os.Getenv("DATA_READY_TOPIC_ARN")
-// 	input := &sns.PublishInput{
-// 		Message:  aws.String(fmt.Sprintf("Data for request ID %d is ready. Block number: %d", event.ID, event.Number)),
-// 		TopicArn: &topicArn,
-// 	}
-// 	fmt.Println("Publishing message to SNS topic...")
-
-// 	_, err = snsClient.Publish(ctx, input)
-// 	if err != nil {
-// 		return "", err
-// 	}
-
-// 	return "Message published to SNS topic successfully.", nil
-// }
-
-// func main() {
-// 	lambda.Start(HandleRequest)
-// }
