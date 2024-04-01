@@ -179,10 +179,12 @@ Resources:
                   - 'dynamodb:UpdateItem'
                   - 'dynamodb:Scan'
                   - 'dynamodb:Query'
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
                 Resource: '*'
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/CloudWatchFullAccess"
 
   ResponderLambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -212,7 +214,9 @@ Resources:
                   - 'dynamodb:UpdateItem'
                   - 'dynamodb:Scan'
                   - 'dynamodb:Query'
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
                 Resource: '*'
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/CloudWatchFullAccess"
