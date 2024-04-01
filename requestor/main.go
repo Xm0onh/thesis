@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+
+	// bc "requestor/blockchain"
 	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -30,6 +32,7 @@ type BlockData struct {
 }
 
 func HandleRequest(ctx context.Context, event json.RawMessage) (string, error) {
+
 	var snsEvent events.SNSEvent
 	err := json.Unmarshal(event, &snsEvent)
 	if err == nil && len(snsEvent.Records) > 0 {

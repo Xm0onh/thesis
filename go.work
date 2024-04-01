@@ -1,4 +1,8 @@
 go 1.21.4
 
 use ./requestor
-use ./responder
+
+use (
+	./Blockchain
+	./responder
+)
