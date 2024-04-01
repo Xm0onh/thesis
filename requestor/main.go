@@ -23,6 +23,7 @@ type BlockRequest struct {
 }
 
 type BlockData struct {
+	RequestorID string `json:"requestorID"`
 	BlockNumber int    `json:"blockNumber"`
 	Data        string `json:"data"`
 	Status      string `json:"status"`
@@ -30,14 +31,16 @@ type BlockData struct {
 
 func HandleRequest(ctx context.Context, event json.RawMessage) (string, error) {
 	var snsEvent events.SNSEvent
-	if err := json.Unmarshal(event, &snsEvent); err != nil && len(snsEvent.Records) >= 0 {
+	err := json.Unmarshal(event, &snsEvent)
+	if err == nil && len(snsEvent.Records) > 0 {
+		// If no error and we have at least one record, handle as an SNS event.
 		return handleResponseProcessing(ctx, snsEvent)
 	}
 
 	var blockRequest BlockRequest
-	err := json.Unmarshal(event, &blockRequest)
+	err = json.Unmarshal(event, &blockRequest)
 
-	if err != nil {
+	if err == nil {
 		return handleRequestInitiation(ctx, blockRequest)
 	}
 
@@ -53,17 +56,18 @@ func handleResponseProcessing(ctx context.Context, snsEvent events.SNSEvent) (st
 	ddbClient := dynamodb.NewFromConfig(cfg)
 
 	for _, record := range snsEvent.Records {
-		var blockData BlockRequest
-		err := json.Unmarshal([]byte(record.SNS.Message), &blockData)
+		var blockData BlockData
+		json.Unmarshal([]byte(record.SNS.Message), &blockData)
+		blockNumber := blockData.BlockNumber
 		if err != nil {
-			return "Failed to unmarshal block data", err
+			return "Failed to convert block number to integer", err
 		}
 
 		out, err := ddbClient.GetItem(ctx, &dynamodb.GetItemInput{
 			TableName: aws.String(os.Getenv("DDB_TABLE_NAME")),
 			Key: map[string]types.AttributeValue{
 				"ID":          &types.AttributeValueMemberS{Value: blockData.RequestorID},
-				"BlockNumber": &types.AttributeValueMemberN{Value: strconv.Itoa(blockData.BlockNumber)},
+				"BlockNumber": &types.AttributeValueMemberN{Value: strconv.Itoa(blockNumber)},
 			},
 		})
 
@@ -76,7 +80,7 @@ func handleResponseProcessing(ctx context.Context, snsEvent events.SNSEvent) (st
 			return "Failed to unmarshal item from DynamoDB", err
 		}
 
-		fmt.Printf("Fetched data for block #%d: %+v\n", blockData.BlockNumber, blockData)
+		fmt.Printf("Fetched data for block #%d: %+v\n", blockNumber, blockData)
 	}
 
 	return "Successfully processed response messages", nil
@@ -90,19 +94,22 @@ func handleRequestInitiation(ctx context.Context, blockRequest BlockRequest) (st
 	}
 
 	snsClient := sns.NewFromConfig(cfg)
-	requestTopicARN := os.Getenv("DATA_READY_TOPIC_ARN")
+	requestTopicARN := os.Getenv("BLOCK_REQUEST_SNS")
 	requestMessage, err := json.Marshal(blockRequest)
 
 	if err != nil {
 		return "Failed to marshal request message", err
 	}
 
+	// Convert blockRequest.BlockNumber to an integer
+	blockNumber := blockRequest.BlockNumber
+
 	_, _ = snsClient.Publish(ctx, &sns.PublishInput{
 		Message:  aws.String(string(requestMessage)),
 		TopicArn: &requestTopicARN,
 	})
 
-	return fmt.Sprintf("Block request for block number %d has been published to SNS topic", blockRequest.BlockNumber), nil
+	return fmt.Sprintf("Block request for block number %d has been published to SNS topic", blockNumber), nil
 }
 
 func main() {

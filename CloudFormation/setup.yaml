@@ -19,6 +19,7 @@ Resources:
         Variables:
           DATA_READY_TOPIC_ARN: !Ref DataReadyTopic
           DDB_TABLE_NAME: !Ref MyDynamoDBTable
+          BLOCK_REQUEST_SNS: !Ref BlockRequestTopic
           ID: 1
   
   ResponderFunction1:
@@ -34,6 +35,7 @@ Resources:
         Variables:
           DATA_READY_TOPIC_ARN: !Ref DataReadyTopic
           DDB_TABLE_NAME: !Ref MyDynamoDBTable
+          BLOCK_REQUEST_SNS: !Ref BlockRequestTopic
           ID: 1
 
   ###################
@@ -50,14 +52,7 @@ Resources:
     Properties:
       DisplayName: BlockRequestTopic
       TopicName: BlockRequestTopic
-
-  ResponseBlockTopic:
-    Type: AWS::SNS::Topic
-    Properties:
-      DisplayName: ResponseBlockTopic
-      TopicName: ResponseBlockTopic
   
-
   ###################
   ##  SQS Queues   ##
   ###################
@@ -99,7 +94,7 @@ Resources:
   ###########################
   ##   SNS Subscriptions   ##
   ###########################
-  
+
   Requestor1SNSSubscription:
     Type: AWS::SNS::Subscription
     Properties:
@@ -111,15 +106,16 @@ Resources:
     Type: AWS::SNS::Subscription
     Properties:
       Protocol: lambda
-      TopicArn: !Ref DataReadyTopic
+      TopicArn: !Ref BlockRequestTopic
       Endpoint: !GetAtt ResponderFunction1.Arn
-
-  # Requestor2SNSSubscription:
-  #   Type: AWS::SNS::Subscription
-  #   Properties:
-  #     Protocol: lambda
-  #     TopicArn: !Ref DataReadyTopic
-  #     Endpoint: !GetAtt RequestorFunction2.Arn
+  
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt ResponderFunction1.Arn
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref BlockRequestTopic
 
   ###########################
   ##   SNS Filter Policy   ##

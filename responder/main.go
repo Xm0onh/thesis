@@ -22,6 +22,7 @@ type BlockRequest struct {
 }
 
 type BlockData struct {
+	RequestorID string `json:"requestorID"`
 	BlockNumber int    `json:"blockNumber"`
 	Data        string `json:"data"`
 	Status      string `json:"status"`
@@ -50,6 +51,7 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 		// For Simplicity generate a block on a fly
 		if request.RequestorID == ResponderID {
 			blockSample := BlockData{
+				RequestorID: request.RequestorID,
 				BlockNumber: request.BlockNumber,
 				Data:        "Block Data",
 				Status:      "Success",
