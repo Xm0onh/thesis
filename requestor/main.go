@@ -32,7 +32,7 @@ type BlockData struct {
 }
 
 func HandleRequest(ctx context.Context, event json.RawMessage) (string, error) {
-
+	// test
 	var snsEvent events.SNSEvent
 	err := json.Unmarshal(event, &snsEvent)
 	if err == nil && len(snsEvent.Records) > 0 {
