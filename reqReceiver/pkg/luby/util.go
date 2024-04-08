@@ -31,7 +31,7 @@ import (
 // N (the number of elements in the CDF) cannot be less than 1
 // The CDF is one-based: the probability of picking 1 from the distribution
 // is CDF[1].
-func solitonDistribution(n int) []float64 {
+func SolitonDistribution(n int) []float64 {
 	cdf := make([]float64, n+1)
 	cdf[1] = 1 / float64(n)
 	for i := 2; i < len(cdf); i++ {
