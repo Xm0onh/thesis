@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"time"
 
-	blockchainPkg "blockchain"
-	lubyTransform "luby"
+	blockchainPkg "github.com/xm0onh/thesis/packages/blockchain"
+	lubyTransform "github.com/xm0onh/thesis/packages/luby"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"

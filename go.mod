@@ -1,6 +1,6 @@
-module blockchain
+module github.com/xm0onh/thesis
 
-go 1.21.4
+go 1.22.1
 
 require (
 	github.com/cbergoon/merkletree v0.2.0

@@ -19,8 +19,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 
-	blockchainPkg "github.com/xm0onh/thesis/packages/Blockchain"
-	lubyTransform "github.com/xm0onh/thesis/packages/Luby"
+	blockchainPkg "github.com/xm0onh/thesis/packages/blockchain"
+	lubyTransform "github.com/xm0onh/thesis/packages/luby"
 )
 
 var exp = 5
