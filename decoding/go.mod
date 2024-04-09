@@ -1,4 +1,4 @@
-module decoding
+module github.com/xm0onh/thesis/decoding
 
 go 1.22.1
 
@@ -8,6 +8,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.27.11
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.13.13
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.31.1
+	github.com/xm0onh/thesis v0.1.0
+
 )
 
 require (
@@ -24,7 +26,12 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.23.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.28.6 // indirect
 	github.com/aws/smithy-go v1.20.2 // indirect
+	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
+	github.com/cbergoon/merkletree v0.2.0 // indirect
+	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
+	github.com/ethereum/go-ethereum v1.13.14 // indirect
+	github.com/holiman/uint256 v1.2.4 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
-	github.com/stretchr/testify v1.8.4 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
+	golang.org/x/crypto v0.17.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
 )
