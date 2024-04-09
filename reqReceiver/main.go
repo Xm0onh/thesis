@@ -146,6 +146,7 @@ var ddbTableName = os.Getenv("DDB_TABLE_NAME")
 
 func init() {
 	gob.Register(blockchainPkg.Transaction{})
+	gob.Register(blockchainPkg.Block{})
 }
 
 func Handler(ctx context.Context, snsEvent events.SNSEvent) error {

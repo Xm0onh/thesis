@@ -93,6 +93,8 @@ var ddbClient *dynamodb.Client
 var tableName = os.Getenv("DDB_TABLE_NAME")
 
 func init() {
+	gob.Register(blockchainPkg.Transaction{})
+	gob.Register(blockchainPkg.Block{})
 	cfg, err := config.LoadDefaultConfig(context.Background())
 	if err != nil {
 		panic(fmt.Sprintf("unable to load SDK config, %v", err))
@@ -151,10 +153,12 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) (blockchainPkg.Block
 				fmt.Printf("Failed to unmarshal DynamoDB item to LTBlock: %v\n", err)
 				continue // Skip this item and continue with the next.
 			}
-			Droplets = append(Droplets, lubyTransform.LTBlock{
-				BlockCode: block.BlockCode,
-				Data:      block.Data,
-			})
+			if len(block.Data) != 0 {
+				Droplets = append(Droplets, lubyTransform.LTBlock{
+					BlockCode: block.BlockCode,
+					Data:      block.Data,
+				})
+			}
 		}
 	}
 
@@ -169,6 +173,6 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) (blockchainPkg.Block
 }
 
 func main() {
-	gob.Register(blockchainPkg.Transaction{})
+
 	lambda.Start(Handler)
 }
