@@ -1,9 +1,1 @@
 go 1.22.1
-
-use (
-	./ReqReceiver
-	./counter
-	./decoding
-	./requestor
-	./responder
-)
