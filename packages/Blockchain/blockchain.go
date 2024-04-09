@@ -197,7 +197,6 @@ func (bc *Blockchain) CalculateBlockchainSize() int {
 	return totalSize
 }
 
-/*
 func main() {
 	// Initialize blockchain
 	bc := Blockchain{}
@@ -260,4 +259,3 @@ func main() {
 	log.Println("Verify Content: ", vc)
 
 }
-*/
