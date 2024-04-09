@@ -6,6 +6,6 @@ use (
 	./decoding
 	./requestor
 	./responder
-	packages/Blockchain
-	packages/Luby
+	packages/blockchain
+	packages/luby
 )

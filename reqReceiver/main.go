@@ -1,18 +1,19 @@
 package main
 
 import (
-	blockchainPkg "blockchain"
 	"bytes"
 	"context"
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
 	"log"
-	lubyTransform "luby"
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
+
+	blockchainPkg "blockchain"
+	lubyTransform "luby"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
