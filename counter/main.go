@@ -30,6 +30,7 @@ func init() {
 }
 
 func Handler(ctx context.Context, ddbEvent events.DynamoDBEvent) error {
+	fmt.Println("Received DynamoDB event")
 	for _, record := range ddbEvent.Records {
 		if record.EventName == "INSERT" { // Process only new insertions.
 			updatedCounter := incrementCounter(ctx)
