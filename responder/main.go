@@ -29,7 +29,7 @@ var exp = 5
 
 var blockchain = initializeBlockchain()
 
-func BlockToByte(block *blockchainPkg.Block) []byte {
+func BlockToByte(block []*blockchainPkg.Block) []byte {
 	var buffer bytes.Buffer
 	encoder := gob.NewEncoder(&buffer)
 	err := encoder.Encode(block)
@@ -39,8 +39,8 @@ func BlockToByte(block *blockchainPkg.Block) []byte {
 	return buffer.Bytes()
 }
 
-func ByteToBlock(data []byte) *blockchainPkg.Block {
-	var block blockchainPkg.Block
+func ByteToBlock(data []byte) *[]blockchainPkg.Block {
+	var block []blockchainPkg.Block
 	buffer := bytes.NewBuffer(data)
 	decoder := gob.NewDecoder(buffer)
 	err := decoder.Decode(&block)
@@ -85,7 +85,7 @@ func initializeBlockchain() *blockchainPkg.Blockchain {
 	return bc
 }
 
-func GenerateDroplet(blockNumber int) ([]lubyTransform.LTBlock, int) {
+func GenerateDroplet(blockNumber []int) ([]lubyTransform.LTBlock, int) {
 	fmt.Println("hey there from droplets")
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
@@ -94,8 +94,11 @@ func GenerateDroplet(blockNumber int) ([]lubyTransform.LTBlock, int) {
 		fmt.Printf("Error encoding object: %s\n", err)
 		return nil, 0
 	}
-
-	message := BlockToByte(&blockchain.Chain[blockNumber])
+	var tempBlockchain []*blockchainPkg.Block
+	for _, blockNumber := range blockNumber {
+		tempBlockchain = append(tempBlockchain, &blockchain.Chain[blockNumber])
+	}
+	message := BlockToByte(tempBlockchain)
 	fmt.Println("Message: ", len(message))
 
 	// Define parameters for the Luby Codec.
@@ -139,7 +142,7 @@ type SizeOfMessage struct {
 	MessageSize int `json:"messageSize"`
 }
 type requestedBlock struct {
-	BlockNumber int `json:"blockNumber"`
+	BlockNumber []int `json:"blockNumber"`
 }
 
 var ddbTableName = os.Getenv("DDB_TABLE_NAME")
