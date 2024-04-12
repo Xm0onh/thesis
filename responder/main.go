@@ -21,6 +21,7 @@ import (
 
 var ddbTableName = os.Getenv("DDB_TABLE_NAME")
 var setupTableName = os.Getenv("SETUP_DB")
+var responderID = os.Getenv("RESPONDER_ID")
 
 func init() {
 	gob.Register(blockchainPkg.Transaction{})
@@ -28,6 +29,7 @@ func init() {
 }
 
 func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
+	fmt.Println("I'm responder: ", responderID)
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to load AWS configuration, %w", err)
@@ -51,6 +53,8 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 		}
 		droplets := utils.GenerateDroplet(*blockchain, dropletReq.BlockNumbers, param)
 		fmt.Println("Generated droplets: ", len(droplets))
+
+		// Uploading only the droplets within the range of start and end
 		for i := dropletReq.Start; i < dropletReq.End; i++ {
 			_, err = ddbClient.PutItem(ctx, &dynamodb.PutItemInput{
 				TableName: aws.String(ddbTableName),
@@ -63,7 +67,7 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 			})
 
 			if err != nil {
-				fmt.Printf("Failed to put LTBlock item into DynamoDB: %v\n", err)
+				fmt.Printf("Skip the droplet because it's already exists: %v\n", err)
 				continue
 			}
 		}
