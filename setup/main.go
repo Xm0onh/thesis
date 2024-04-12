@@ -26,6 +26,7 @@ type StartSignal struct {
 	Start           bool `json:"start"`
 	SourceBlocks    int  `json:"sourceBlocks"`
 	EncodedBlockIDs int  `json:"encodedBlockIDs"`
+	NumberOfBlocks  int  `json:"numberOfBlocks"`
 }
 
 func Handler(ctx context.Context, event StartSignal) (string, error) {
@@ -57,6 +58,7 @@ func Handler(ctx context.Context, event StartSignal) (string, error) {
 			"randomSeed":      &types.AttributeValueMemberN{Value: strconv.FormatInt(seed, 10)},
 			"sourceBlocks":    &types.AttributeValueMemberN{Value: strconv.Itoa(sourceBlocks)},
 			"encodedBlockIDs": &types.AttributeValueMemberN{Value: strconv.Itoa(encodedBlockIDs)},
+			"numberOfBlocks":  &types.AttributeValueMemberN{Value: strconv.Itoa(event.NumberOfBlocks)},
 		},
 	})
 	if err != nil {
