@@ -90,35 +90,6 @@ func UploadMessageSize(blockchain blockchainPkg.Blockchain, blockNumber []int) (
 	return len(message), nil
 }
 
-func FetchMessageSize(ctx context.Context, tableName string, ddbClient *dynamodb.Client) (int, error) {
-	result, err := ddbClient.GetItem(ctx, &dynamodb.GetItemInput{
-		TableName: aws.String(tableName),
-		Key: map[string]types.AttributeValue{
-			"ID": &types.AttributeValueMemberS{Value: "message"},
-		},
-	})
-
-	if err != nil {
-		return 0, fmt.Errorf("failed to get message size from DynamoDB: %v", err)
-	}
-
-	if result.Item == nil {
-		return 0, fmt.Errorf("message size item not found")
-	}
-
-	messageSizeAttr, ok := result.Item["MessageSize"]
-	if !ok {
-		return 0, fmt.Errorf("message size attribute not found")
-	}
-
-	messageSize, err := strconv.Atoi(messageSizeAttr.(*types.AttributeValueMemberN).Value)
-	if err != nil {
-		return 0, fmt.Errorf("failed to convert message size to int: %v", err)
-	}
-
-	return messageSize, nil
-}
-
 func PullDataFromSetup(ctx context.Context, setupTableName string) (
 	degreeCDF []float64,
 	sourceBlocks,

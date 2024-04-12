@@ -29,8 +29,9 @@ type SetupParameters struct {
 }
 
 type StartSignal struct {
-	Start           bool `json:"start"`
-	SourceBlocks    int  `json:"sourceBlocks"`
-	EncodedBlockIDs int  `json:"encodedBlockIDs"`
-	NumberOfBlocks  int  `json:"numberOfBlocks"`
+	Start           bool  `json:"start"`
+	SourceBlocks    int   `json:"sourceBlocks"`
+	EncodedBlockIDs int   `json:"encodedBlockIDs"`
+	NumberOfBlocks  int   `json:"numberOfBlocks"`
+	Blocks          []int `json:"blocks"`
 }

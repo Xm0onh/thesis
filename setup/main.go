@@ -42,7 +42,9 @@ func Handler(ctx context.Context, event utils.StartSignal) (string, error) {
 	degreeCDFString, _ := json.Marshal(degreeCDF)
 	// Create a PRNG source.
 	seed := time.Now().UnixNano()
+	blockchain := utils.InitializeBlockchain(event.NumberOfBlocks)
 
+	messageSize, _ := utils.UploadMessageSize(*blockchain, event.Blocks)
 	// Add MessageSize into the Database
 	_, err = ddbClient.PutItem(ctx, &dynamodb.PutItemInput{
 		TableName: aws.String(tableName),
@@ -53,6 +55,8 @@ func Handler(ctx context.Context, event utils.StartSignal) (string, error) {
 			"sourceBlocks":    &types.AttributeValueMemberN{Value: strconv.Itoa(sourceBlocks)},
 			"encodedBlockIDs": &types.AttributeValueMemberN{Value: strconv.Itoa(encodedBlockIDs)},
 			"numberOfBlocks":  &types.AttributeValueMemberN{Value: strconv.Itoa(event.NumberOfBlocks)},
+			"requestedBlocks": &types.AttributeValueMemberS{Value: fmt.Sprint(event.Blocks)},
+			"messageSize":     &types.AttributeValueMemberN{Value: strconv.Itoa(messageSize)},
 		},
 	})
 	if err != nil {
