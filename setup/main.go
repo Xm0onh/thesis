@@ -8,13 +8,14 @@ import (
 	"strconv"
 	"time"
 
-	lubyTransform "github.com/xm0onh/thesis/packages/luby"
-
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/aws/aws-sdk-go/aws"
+
+	lubyTransform "github.com/xm0onh/thesis/packages/luby"
+	utils "github.com/xm0onh/thesis/packages/utils"
 )
 
 // var snsTopicARN = os.Getenv("STARTER_SNS_TOPIC_ARN")
@@ -22,14 +23,7 @@ var tableName = os.Getenv("SETUP_DB")
 
 // var snsClient *sns.Client
 
-type StartSignal struct {
-	Start           bool `json:"start"`
-	SourceBlocks    int  `json:"sourceBlocks"`
-	EncodedBlockIDs int  `json:"encodedBlockIDs"`
-	NumberOfBlocks  int  `json:"numberOfBlocks"`
-}
-
-func Handler(ctx context.Context, event StartSignal) (string, error) {
+func Handler(ctx context.Context, event utils.StartSignal) (string, error) {
 	if !event.Start {
 		return "Event does not contain start signal", nil
 	}

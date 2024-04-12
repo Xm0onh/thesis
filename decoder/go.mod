@@ -8,11 +8,12 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.27.11
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.13.13
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.31.1
-	github.com/xm0onh/thesis v0.1.0
+	github.com/xm0onh/thesis v0.2.0
 
 )
 
 require (
+	github.com/aws/aws-sdk-go v1.51.20 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.11 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.16.1 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.5 // indirect

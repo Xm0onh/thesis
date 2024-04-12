@@ -4,11 +4,10 @@ go 1.22.1
 
 require (
 	github.com/aws/aws-lambda-go v1.46.0
-	github.com/aws/aws-sdk-go v1.51.19
+	github.com/aws/aws-sdk-go v1.51.20
 	github.com/aws/aws-sdk-go-v2/config v1.27.11
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.31.1
-	github.com/aws/aws-sdk-go-v2/service/sns v1.29.4
-	github.com/xm0onh/thesis v0.1.0
+	github.com/xm0onh/thesis v0.2.0
 )
 
 require (
@@ -25,5 +24,12 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.23.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.28.6 // indirect
 	github.com/aws/smithy-go v1.20.2 // indirect
+	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
+	github.com/cbergoon/merkletree v0.2.0 // indirect
+	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
+	github.com/ethereum/go-ethereum v1.13.14 // indirect
+	github.com/holiman/uint256 v1.2.4 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	golang.org/x/crypto v0.17.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
 )

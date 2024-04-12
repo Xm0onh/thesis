@@ -32,7 +32,7 @@ func init() {
 func Handler(ctx context.Context, ddbEvent events.DynamoDBEvent) error {
 	fmt.Println("Received DynamoDB event")
 	for _, record := range ddbEvent.Records {
-		if record.EventName == "INSERT" { // Process only new insertions.
+		if record.EventName == "INSERT" {
 			updatedCounter := incrementCounter(ctx)
 			if updatedCounter >= 100 {
 				_, err := snsClient.Publish(ctx, &sns.PublishInput{

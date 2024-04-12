@@ -20,3 +20,10 @@ type SetupParameters struct {
 	EncodedBlockIDs int       `json:"encodedBlockIDs"`
 	NumberOfBlocks  int       `json:"numberOfBlocks"`
 }
+
+type StartSignal struct {
+	Start           bool `json:"start"`
+	SourceBlocks    int  `json:"sourceBlocks"`
+	EncodedBlockIDs int  `json:"encodedBlockIDs"`
+	NumberOfBlocks  int  `json:"numberOfBlocks"`
+}
