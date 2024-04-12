@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/gob"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -66,19 +65,14 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) ([]blockchainPkg.Blo
 		}
 	}
 
-	messageSize, err := utils.FetchMessageSize(ctx, tableName, ddbClient)
-	if err != nil {
-		log.Printf("Error fetching message size: %v", err)
-		return []blockchainPkg.Block{}, err
-	}
 	param := utils.SetupParameters{}
-	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, err = utils.PullDataFromSetup(ctx, setupTableName)
+	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, param.messageSize, err = utils.PullDataFromSetup(ctx, setupTableName)
 	if err != nil {
 		fmt.Printf("Failed to pull data from setup: %v\n", err)
 		return []blockchainPkg.Block{}, err
 	}
 	fmt.Printf("Downloaded %d LTBlocks.\n", len(Droplets))
-	return utils.Decoder(Droplets, messageSize, param)
+	return utils.Decoder(Droplets, param.messageSize, param)
 }
 
 func main() {

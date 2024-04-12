@@ -74,6 +74,22 @@ func InitializeBlockchain(NumberOfBlocks int) *blockchainPkg.Blockchain {
 	return bc
 }
 
+func UploadMessageSize(blockchain blockchainPkg.Blockchain, blockNumber []int) (int, error) {
+	var buf bytes.Buffer
+	enc := gob.NewEncoder(&buf)
+
+	if err := enc.Encode(blockchain); err != nil {
+		fmt.Printf("Error encoding object: %s\n", err)
+		return 0, err
+	}
+	var tempBlockchain []*blockchainPkg.Block
+	for _, blockNumber := range blockNumber {
+		tempBlockchain = append(tempBlockchain, &blockchain.Chain[blockNumber])
+	}
+	message := BlockToByte(tempBlockchain)
+	return len(message), nil
+}
+
 func FetchMessageSize(ctx context.Context, tableName string, ddbClient *dynamodb.Client) (int, error) {
 	result, err := ddbClient.GetItem(ctx, &dynamodb.GetItemInput{
 		TableName: aws.String(tableName),
@@ -103,7 +119,15 @@ func FetchMessageSize(ctx context.Context, tableName string, ddbClient *dynamodb
 	return messageSize, nil
 }
 
-func PullDataFromSetup(ctx context.Context, setupTableName string) (degreeCDF []float64, sourceBlocks, encodedBlockIDs int, randomSeed int64, numberOfBlocks int, err error) {
+func PullDataFromSetup(ctx context.Context, setupTableName string) (
+	degreeCDF []float64,
+	sourceBlocks,
+	encodedBlockIDs int,
+	randomSeed int64,
+	numberOfBlocks int,
+	messageSize int,
+	err error) {
+
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		fmt.Printf("failed to load AWS configuration, %v\n", err)
@@ -170,24 +194,32 @@ func PullDataFromSetup(ctx context.Context, setupTableName string) (degreeCDF []
 		}
 	}
 
+	// Extracting MessageSize
+	if v, ok := result.Item["messageSize"].(*types.AttributeValueMemberN); ok {
+		messageSize, err = strconv.Atoi(v.Value)
+		if err != nil {
+			fmt.Printf("error parsing messageSize: %v\n", err)
+			return
+		}
+	}
+
 	return
 }
 
-func GenerateDroplet(blockchain blockchainPkg.Blockchain, blockNumber []int, param SetupParameters) ([]lubyTransform.LTBlock, int) {
+func GenerateDroplet(blockchain blockchainPkg.Blockchain, blockNumber []int, param SetupParameters) []lubyTransform.LTBlock {
 	fmt.Println("hey there from droplets")
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
 
 	if err := enc.Encode(blockchain); err != nil {
 		fmt.Printf("Error encoding object: %s\n", err)
-		return nil, 0
+		return nil
 	}
 	var tempBlockchain []*blockchainPkg.Block
 	for _, blockNumber := range blockNumber {
 		tempBlockchain = append(tempBlockchain, &blockchain.Chain[blockNumber])
 	}
 	message := BlockToByte(tempBlockchain)
-	fmt.Println("Message: ", len(message))
 
 	// Define parameters for the Luby Codec.
 	sourceBlocks := param.SourceBlocks
@@ -213,13 +245,13 @@ func GenerateDroplet(blockchain blockchainPkg.Blockchain, blockNumber []int, par
 
 	if err := enc.Encode(droplets); err != nil {
 		fmt.Printf("Error encoding object: %s\n", err)
-		return nil, 0
+		return nil
 	}
 
-	return droplets, len(message)
+	return droplets
 }
 
-func Decoder(Droplets []lubyTransform.LTBlock, messageSize int, param SetupParameters) ([]blockchainPkg.Block, error) {
+func Decoder(Droplets []lubyTransform.LTBlock, param SetupParameters) ([]blockchainPkg.Block, error) {
 	// message := "Hello, World!"
 	sourceBlocks := param.SourceBlocks
 	degreeCDF := param.DegreeCDF
@@ -232,7 +264,7 @@ func Decoder(Droplets []lubyTransform.LTBlock, messageSize int, param SetupParam
 	// Create a new Luby Codec.
 	codec := lubyTransform.NewLubyCodec(sourceBlocks, random, degreeCDF)
 
-	decoder := codec.NewDecoder(messageSize)
+	decoder := codec.NewDecoder(param.MessageSize)
 
 	if decoder.AddBlocks(Droplets) {
 		decodedMessage := decoder.Decode()

@@ -27,13 +27,19 @@ func init() {
 	gob.Register(blockchainPkg.Block{})
 }
 
+type RequestedDroplets struct {
+	BlockNumbers []int `json:"blockNumbers"`
+	Start        int   `json:"start"`
+	End          int   `json:"end"`
+}
+
 func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to load AWS configuration, %w", err)
 	}
 	param := utils.SetupParameters{}
-	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, _ = utils.PullDataFromSetup(ctx, setupTableName)
+	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, _, err = utils.PullDataFromSetup(ctx, setupTableName)
 	if err != nil {
 		fmt.Printf("Failed to pull data from setup: %v\n", err)
 		return err
@@ -41,36 +47,23 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 	ddbClient := dynamodb.NewFromConfig(cfg)
 	blockchain := utils.InitializeBlockchain(param.NumberOfBlocks)
 	for _, record := range snsEvent.Records {
-		var block utils.RequestedBlocks
-		err := json.Unmarshal([]byte(record.SNS.Message), &block)
-		fmt.Println("Received request for block numbers: ", block.BlockNumber)
+		var dropletReq RequestedDroplets
+
+		err := json.Unmarshal([]byte(record.SNS.Message), &dropletReq)
+		fmt.Println("Received request for block numbers: ", dropletReq)
 		if err != nil {
 			fmt.Printf("Failed to unmarshal LTBlock data: %v\n", err)
 			continue
 		}
-		droplets, messageSize := utils.GenerateDroplet(*blockchain, block.BlockNumber, param)
+		droplets := utils.GenerateDroplet(*blockchain, dropletReq.BlockNumbers, param)
 
-		// Add MessageSize into the Database
-		_, err = ddbClient.PutItem(ctx, &dynamodb.PutItemInput{
-			TableName: aws.String(ddbTableName),
-			Item: map[string]types.AttributeValue{
-				"ID":          &types.AttributeValueMemberS{Value: "message"},
-				"MessageSize": &types.AttributeValueMemberN{Value: strconv.Itoa(messageSize)},
-			},
-		})
-		if err != nil {
-			fmt.Printf("Failed to put metadata item into DynamoDB: %v\n", err)
-			return err
-		}
-
-		for _, droplet := range droplets {
-
+		for i := dropletReq.Start; i < dropletReq.End; i++ {
 			_, err = ddbClient.PutItem(ctx, &dynamodb.PutItemInput{
 				TableName: aws.String(ddbTableName),
 				Item: map[string]types.AttributeValue{
-					"ID":        &types.AttributeValueMemberS{Value: strconv.FormatInt(droplet.BlockCode, 10)},
-					"Data":      &types.AttributeValueMemberB{Value: droplet.Data},
-					"BlockCode": &types.AttributeValueMemberN{Value: strconv.FormatInt(droplet.BlockCode, 10)},
+					"ID":        &types.AttributeValueMemberS{Value: strconv.Itoa(i)},
+					"Data":      &types.AttributeValueMemberB{Value: droplets[i].Data},
+					"BlockCode": &types.AttributeValueMemberN{Value: strconv.FormatInt(droplets[i].BlockCode, 10)},
 				},
 				ConditionExpression: aws.String("attribute_not_exists(ID)"),
 			})
