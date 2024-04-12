@@ -66,13 +66,10 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) ([]blockchainPkg.Blo
 	}
 
 	param := utils.SetupParameters{}
-	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, param.messageSize, err = utils.PullDataFromSetup(ctx, setupTableName)
-	if err != nil {
-		fmt.Printf("Failed to pull data from setup: %v\n", err)
-		return []blockchainPkg.Block{}, err
-	}
+	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, param.MessageSize, _ = utils.PullDataFromSetup(ctx, setupTableName)
+
 	fmt.Printf("Downloaded %d LTBlocks.\n", len(Droplets))
-	return utils.Decoder(Droplets, param.messageSize, param)
+	return utils.Decoder(Droplets, param)
 }
 
 func main() {

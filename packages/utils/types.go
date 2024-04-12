@@ -14,8 +14,9 @@ type RequestedBlocks struct {
 }
 
 type RequestedDroplets struct {
-	Start int `json:"start"`
-	End   int `json:"end"`
+	Start        int   `json:"start"`
+	End          int   `json:"end"`
+	BlockNumbers []int `json:"blockNumbers"`
 }
 
 type SetupParameters struct {

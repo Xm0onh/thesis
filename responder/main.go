@@ -27,12 +27,6 @@ func init() {
 	gob.Register(blockchainPkg.Block{})
 }
 
-type RequestedDroplets struct {
-	BlockNumbers []int `json:"blockNumbers"`
-	Start        int   `json:"start"`
-	End          int   `json:"end"`
-}
-
 func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
@@ -47,7 +41,7 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 	ddbClient := dynamodb.NewFromConfig(cfg)
 	blockchain := utils.InitializeBlockchain(param.NumberOfBlocks)
 	for _, record := range snsEvent.Records {
-		var dropletReq RequestedDroplets
+		var dropletReq utils.RequestedDroplets
 
 		err := json.Unmarshal([]byte(record.SNS.Message), &dropletReq)
 		fmt.Println("Received request for block numbers: ", dropletReq)
