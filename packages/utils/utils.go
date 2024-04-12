@@ -103,7 +103,7 @@ func FetchMessageSize(ctx context.Context, tableName string, ddbClient *dynamodb
 	return messageSize, nil
 }
 
-func PullDataFromSetup(ctx context.Context, setupTableName string) (degreeCDF []float64, sourceBlocks, encodedBlockIDs int, randomSeed int64, err error) {
+func PullDataFromSetup(ctx context.Context, setupTableName string) (degreeCDF []float64, sourceBlocks, encodedBlockIDs int, randomSeed int64, numberOfBlocks int, err error) {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		fmt.Printf("failed to load AWS configuration, %v\n", err)
@@ -157,6 +157,15 @@ func PullDataFromSetup(ctx context.Context, setupTableName string) (degreeCDF []
 		encodedBlockIDs, err = strconv.Atoi(v.Value)
 		if err != nil {
 			fmt.Printf("error parsing encodedBlockIDs: %v\n", err)
+			return
+		}
+	}
+
+	// Extracting NumberOfBlocks
+	if v, ok := result.Item["numberOfBlocks"].(*types.AttributeValueMemberN); ok {
+		numberOfBlocks, err = strconv.Atoi(v.Value)
+		if err != nil {
+			fmt.Printf("error parsing numberOfBlocks: %v\n", err)
 			return
 		}
 	}
