@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/gob"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -14,6 +15,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/aws/aws-sdk-go/aws"
 
+	blockchainPkg "github.com/xm0onh/thesis/packages/blockchain"
 	lubyTransform "github.com/xm0onh/thesis/packages/luby"
 	utils "github.com/xm0onh/thesis/packages/utils"
 )
@@ -22,6 +24,11 @@ import (
 var tableName = os.Getenv("SETUP_DB")
 
 // var snsClient *sns.Client
+
+func init() {
+	gob.Register(blockchainPkg.Transaction{})
+	gob.Register(blockchainPkg.Block{})
+}
 
 func Handler(ctx context.Context, event utils.StartSignal) (string, error) {
 	if !event.Start {
@@ -44,12 +51,15 @@ func Handler(ctx context.Context, event utils.StartSignal) (string, error) {
 	seed := time.Now().UnixNano()
 	blockchain := utils.InitializeBlockchain(event.NumberOfBlocks)
 
-	messageSize, _ := utils.UploadMessageSize(*blockchain, event.Blocks)
+	messageSize, err := utils.UploadMessageSize(*blockchain, event.Blocks)
+	if err != nil {
+		return "Failed to evaluate message size", err
+	}
 	// Add MessageSize into the Database
 	_, err = ddbClient.PutItem(ctx, &dynamodb.PutItemInput{
 		TableName: aws.String(tableName),
 		Item: map[string]types.AttributeValue{
-			"ID":              &types.AttributeValueMemberS{Value: "message"},
+			"ID":              &types.AttributeValueMemberS{Value: "setup"},
 			"degreeCDF":       &types.AttributeValueMemberS{Value: string(degreeCDFString)},
 			"randomSeed":      &types.AttributeValueMemberN{Value: strconv.FormatInt(seed, 10)},
 			"sourceBlocks":    &types.AttributeValueMemberN{Value: strconv.Itoa(sourceBlocks)},

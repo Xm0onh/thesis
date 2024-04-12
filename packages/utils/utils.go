@@ -110,7 +110,7 @@ func PullDataFromSetup(ctx context.Context, setupTableName string) (
 	result, err := ddbClient.GetItem(ctx, &dynamodb.GetItemInput{
 		TableName: aws.String(setupTableName),
 		Key: map[string]types.AttributeValue{
-			"ID": &types.AttributeValueMemberS{Value: "message"},
+			"ID": &types.AttributeValueMemberS{Value: "setup"},
 		},
 	})
 	if err != nil {
