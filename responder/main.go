@@ -10,7 +10,6 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
-	"time"
 
 	blockchainPkg "github.com/xm0onh/thesis/packages/blockchain"
 	lubyTransform "github.com/xm0onh/thesis/packages/luby"
@@ -85,7 +84,7 @@ func initializeBlockchain() *blockchainPkg.Blockchain {
 	return bc
 }
 
-func GenerateDroplet(blockNumber []int) ([]lubyTransform.LTBlock, int) {
+func GenerateDroplet(blockNumber []int, param SetupParameters) ([]lubyTransform.LTBlock, int) {
 	fmt.Println("hey there from droplets")
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
@@ -102,11 +101,13 @@ func GenerateDroplet(blockNumber []int) ([]lubyTransform.LTBlock, int) {
 	fmt.Println("Message: ", len(message))
 
 	// Define parameters for the Luby Codec.
-	sourceBlocks := int(exp * 15 / 10)
-	degreeCDF := lubyTransform.SolitonDistribution(sourceBlocks)
+	sourceBlocks := param.SourceBlocks
+	degreeCDF := param.DegreeCDF
 
 	// Create a PRNG source.
-	seed := rand.NewSource(time.Now().UnixNano())
+
+	seedValue := param.RandomSeed
+	seed := rand.NewSource(seedValue)
 	random := rand.New(seed)
 
 	// Create a new Luby Codec.
@@ -114,7 +115,7 @@ func GenerateDroplet(blockNumber []int) ([]lubyTransform.LTBlock, int) {
 
 	// Encode the message into LTBlocks.
 	// Commitment size
-	encodedBlockIDs := make([]int64, int(exp*20/10))
+	encodedBlockIDs := make([]int64, param.EncodedBlockIDs)
 	for i := range encodedBlockIDs {
 		encodedBlockIDs[i] = int64(i)
 	}
@@ -141,15 +142,86 @@ type LTBlock struct {
 type SizeOfMessage struct {
 	MessageSize int `json:"messageSize"`
 }
-type requestedBlock struct {
+
+type requestedBlocks struct {
 	BlockNumber []int `json:"blockNumber"`
 }
 
 var ddbTableName = os.Getenv("DDB_TABLE_NAME")
+var setupTableName = os.Getenv("SETUP_DB")
 
 func init() {
 	gob.Register(blockchainPkg.Transaction{})
 	gob.Register(blockchainPkg.Block{})
+}
+
+type SetupParameters struct {
+	DegreeCDF       []float64 `json:"degreeCDF"`
+	RandomSeed      int64     `json:"randomSeed"`
+	SourceBlocks    int       `json:"sourceBlocks"`
+	EncodedBlockIDs int       `json:"encodedBlockIDs"`
+}
+
+// Pull data from setup dynamo db
+func PullDataFromSetup(ctx context.Context) (degreeCDF []float64, sourceBlocks, encodedBlockIDs int, randomSeed int64, err error) {
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		fmt.Printf("failed to load AWS configuration, %v\n", err)
+		return
+	}
+
+	ddbClient := dynamodb.NewFromConfig(cfg)
+
+	result, err := ddbClient.GetItem(ctx, &dynamodb.GetItemInput{
+		TableName: aws.String(setupTableName),
+		Key: map[string]types.AttributeValue{
+			"ID": &types.AttributeValueMemberS{Value: "message"},
+		},
+	})
+	if err != nil {
+		fmt.Printf("failed to get item from DynamoDB: %v\n", err)
+		return
+	}
+
+	// Extracting DegreeCDF
+	if v, ok := result.Item["degreeCDF"].(*types.AttributeValueMemberS); ok {
+		err = json.Unmarshal([]byte(v.Value), &degreeCDF)
+		if err != nil {
+			fmt.Printf("error parsing degreeCDF: %v\n", err)
+			return
+		}
+	}
+
+	// Extracting SourceBlocks
+	if v, ok := result.Item["sourceBlocks"].(*types.AttributeValueMemberN); ok {
+		sourceBlocks, err = strconv.Atoi(v.Value)
+		if err != nil {
+			fmt.Printf("error parsing sourceBlocks: %v\n", err)
+			return
+		}
+	}
+
+	// Extracting RandomSeed
+	if v, ok := result.Item["randomSeed"].(*types.AttributeValueMemberN); ok {
+		var rs int64
+		rs, err = strconv.ParseInt(v.Value, 10, 64)
+		if err != nil {
+			fmt.Printf("error parsing randomSeed: %v\n", err)
+			return
+		}
+		randomSeed = int64(rs) // Note: Be cautious with potential int64 to int conversion issues on 32-bit systems
+	}
+
+	// Extracting EncodedBlockIDs
+	if v, ok := result.Item["encodedBlockIDs"].(*types.AttributeValueMemberN); ok {
+		encodedBlockIDs, err = strconv.Atoi(v.Value)
+		if err != nil {
+			fmt.Printf("error parsing encodedBlockIDs: %v\n", err)
+			return
+		}
+	}
+
+	return
 }
 
 func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
@@ -157,18 +229,23 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 	if err != nil {
 		return fmt.Errorf("failed to load AWS configuration, %w", err)
 	}
-
+	param := SetupParameters{}
+	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, err = PullDataFromSetup(ctx)
+	if err != nil {
+		fmt.Printf("Failed to pull data from setup: %v\n", err)
+		return err
+	}
 	ddbClient := dynamodb.NewFromConfig(cfg)
 
 	for _, record := range snsEvent.Records {
-		var block requestedBlock
+		var block requestedBlocks
 		err := json.Unmarshal([]byte(record.SNS.Message), &block)
-		fmt.Println("Received request for block number: ", block.BlockNumber)
+		fmt.Println("Received request for block numbers: ", block.BlockNumber)
 		if err != nil {
 			fmt.Printf("Failed to unmarshal LTBlock data: %v\n", err)
 			continue
 		}
-		droplets, messageSize := GenerateDroplet(block.BlockNumber)
+		droplets, messageSize := GenerateDroplet(block.BlockNumber, param)
 
 		// Add MessageSize into the Database
 		_, err = ddbClient.PutItem(ctx, &dynamodb.PutItemInput{

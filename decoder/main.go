@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/gob"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
 	"os"
 	"strconv"
-	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -24,9 +24,10 @@ import (
 )
 
 var exp = 5
+var setupTableName = os.Getenv("SETUP_DB")
 
 // //
-func BlockToByte(block *blockchainPkg.Block) []byte {
+func BlockToByte(block []*blockchainPkg.Block) []byte {
 	var buffer bytes.Buffer
 	encoder := gob.NewEncoder(&buffer)
 	err := encoder.Encode(block)
@@ -36,8 +37,8 @@ func BlockToByte(block *blockchainPkg.Block) []byte {
 	return buffer.Bytes()
 }
 
-func ByteToBlock(data []byte) *blockchainPkg.Block {
-	var block blockchainPkg.Block
+func ByteToBlock(data []byte) *[]blockchainPkg.Block {
+	var block []blockchainPkg.Block
 	buffer := bytes.NewBuffer(data)
 	decoder := gob.NewDecoder(buffer)
 	err := decoder.Decode(&block)
@@ -47,13 +48,14 @@ func ByteToBlock(data []byte) *blockchainPkg.Block {
 	return &block
 }
 
-func Decoder(Droplets []lubyTransform.LTBlock, messageSize int) (blockchainPkg.Block, error) {
+func Decoder(Droplets []lubyTransform.LTBlock, messageSize int, param SetupParameters) ([]blockchainPkg.Block, error) {
 	// message := "Hello, World!"
-	sourceBlocks := int(exp * 15 / 10)
-	degreeCDF := lubyTransform.SolitonDistribution(sourceBlocks)
+	sourceBlocks := param.SourceBlocks
+	degreeCDF := param.DegreeCDF
 
 	// Create a PRNG source.
-	seed := rand.NewSource(time.Now().UnixNano())
+	seedValue := param.RandomSeed
+	seed := rand.NewSource(seedValue)
 	random := rand.New(seed)
 
 	// Create a new Luby Codec.
@@ -62,15 +64,14 @@ func Decoder(Droplets []lubyTransform.LTBlock, messageSize int) (blockchainPkg.B
 	decoder := codec.NewDecoder(messageSize)
 
 	if decoder.AddBlocks(Droplets) {
-		// If the decoder has enough blocks, try to decode the message.
 		decodedMessage := decoder.Decode()
 
 		if decodedMessage != nil {
-			// Convert blockchain bytes to a Blockchain object.
-			decodedBlock := ByteToBlock(decodedMessage)
+			// Convert blockchain bytes to a Blocks object.
+			decodedBlocks := ByteToBlock(decodedMessage)
 			// size of decodedBlockchain
-			fmt.Println("Decoded blockchain: ", decodedBlock)
-			return *decodedBlock, nil
+			fmt.Println("Decoded blockchain: ", decodedBlocks)
+			return *decodedBlocks, nil
 
 		} else {
 			fmt.Println("Not enough blocks to decode the message.")
@@ -78,13 +79,20 @@ func Decoder(Droplets []lubyTransform.LTBlock, messageSize int) (blockchainPkg.B
 	} else {
 		fmt.Println("Not enough blocks to decode the message.")
 	}
-	return blockchainPkg.Block{}, nil
+	return []blockchainPkg.Block{}, nil
 }
 
 // /
 type LTBlock struct {
 	BlockCode int64  `json:"blockCode"`
 	Data      []byte `json:"data"`
+}
+
+type SetupParameters struct {
+	DegreeCDF       []float64 `json:"degreeCDF"`
+	RandomSeed      int64     `json:"randomSeed"`
+	SourceBlocks    int       `json:"sourceBlocks"`
+	EncodedBlockIDs int       `json:"encodedBlockIDs"`
 }
 
 var Droplets []lubyTransform.LTBlock
@@ -131,7 +139,68 @@ func fetchMessageSize(ctx context.Context) (int, error) {
 	return messageSize, nil
 }
 
-func Handler(ctx context.Context, snsEvent events.SNSEvent) (blockchainPkg.Block, error) {
+func PullDataFromSetup(ctx context.Context) (degreeCDF []float64, sourceBlocks, encodedBlockIDs int, randomSeed int64, err error) {
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		fmt.Printf("failed to load AWS configuration, %v\n", err)
+		return
+	}
+
+	ddbClient := dynamodb.NewFromConfig(cfg)
+
+	result, err := ddbClient.GetItem(ctx, &dynamodb.GetItemInput{
+		TableName: aws.String(setupTableName),
+		Key: map[string]types.AttributeValue{
+			"ID": &types.AttributeValueMemberS{Value: "message"},
+		},
+	})
+	if err != nil {
+		fmt.Printf("failed to get item from DynamoDB: %v\n", err)
+		return
+	}
+
+	// Extracting DegreeCDF
+	if v, ok := result.Item["degreeCDF"].(*types.AttributeValueMemberS); ok {
+		err = json.Unmarshal([]byte(v.Value), &degreeCDF)
+		if err != nil {
+			fmt.Printf("error parsing degreeCDF: %v\n", err)
+			return
+		}
+	}
+
+	// Extracting SourceBlocks
+	if v, ok := result.Item["sourceBlocks"].(*types.AttributeValueMemberN); ok {
+		sourceBlocks, err = strconv.Atoi(v.Value)
+		if err != nil {
+			fmt.Printf("error parsing sourceBlocks: %v\n", err)
+			return
+		}
+	}
+
+	// Extracting RandomSeed
+	if v, ok := result.Item["randomSeed"].(*types.AttributeValueMemberN); ok {
+		var rs int64
+		rs, err = strconv.ParseInt(v.Value, 10, 64)
+		if err != nil {
+			fmt.Printf("error parsing randomSeed: %v\n", err)
+			return
+		}
+		randomSeed = int64(rs) // Note: Be cautious with potential int64 to int conversion issues on 32-bit systems
+	}
+
+	// Extracting EncodedBlockIDs
+	if v, ok := result.Item["encodedBlockIDs"].(*types.AttributeValueMemberN); ok {
+		encodedBlockIDs, err = strconv.Atoi(v.Value)
+		if err != nil {
+			fmt.Printf("error parsing encodedBlockIDs: %v\n", err)
+			return
+		}
+	}
+
+	return
+}
+
+func Handler(ctx context.Context, snsEvent events.SNSEvent) ([]blockchainPkg.Block, error) {
 	fmt.Println("Received notification from SNS, downloading items from DynamoDB")
 
 	pag := dynamodb.NewScanPaginator(ddbClient, &dynamodb.ScanInput{
@@ -142,7 +211,7 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) (blockchainPkg.Block
 		out, err := pag.NextPage(ctx)
 		if err != nil {
 			fmt.Printf("Failed to scan DynamoDB table: %v\n", err)
-			return blockchainPkg.Block{}, err
+			return []blockchainPkg.Block{}, err
 		}
 
 		for _, item := range out.Items {
@@ -165,11 +234,16 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) (blockchainPkg.Block
 	messageSize, err := fetchMessageSize(ctx)
 	if err != nil {
 		log.Printf("Error fetching message size: %v", err)
-		return blockchainPkg.Block{}, err
+		return []blockchainPkg.Block{}, err
 	}
-
+	param := SetupParameters{}
+	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, err = PullDataFromSetup(ctx)
+	if err != nil {
+		fmt.Printf("Failed to pull data from setup: %v\n", err)
+		return []blockchainPkg.Block{}, err
+	}
 	fmt.Printf("Downloaded %d LTBlocks.\n", len(Droplets))
-	return Decoder(Droplets, messageSize)
+	return Decoder(Droplets, messageSize, param)
 }
 
 func main() {
