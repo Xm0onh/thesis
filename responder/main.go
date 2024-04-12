@@ -50,7 +50,7 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 			continue
 		}
 		droplets := utils.GenerateDroplet(*blockchain, dropletReq.BlockNumbers, param)
-
+		fmt.Println("Generated droplets: ", len(droplets))
 		for i := dropletReq.Start; i < dropletReq.End; i++ {
 			_, err = ddbClient.PutItem(ctx, &dynamodb.PutItemInput{
 				TableName: aws.String(ddbTableName),
