@@ -183,7 +183,7 @@ func PullDataFromSetup(ctx context.Context, setupTableName string) (
 	return
 }
 
-func GenerateDroplet(message []byte, param SetupParameters) []lubyTransform.LTBlock {
+func GenerateDroplet(param SetupParameters) []lubyTransform.LTBlock {
 	fmt.Println("hey there from droplets")
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
@@ -208,7 +208,7 @@ func GenerateDroplet(message []byte, param SetupParameters) []lubyTransform.LTBl
 		encodedBlockIDs[i] = int64(i)
 	}
 
-	droplets := lubyTransform.EncodeLTBlocks(message, encodedBlockIDs, codec)
+	droplets := lubyTransform.EncodeLTBlocks(param.Message, encodedBlockIDs, codec)
 
 	if err := enc.Encode(droplets); err != nil {
 		fmt.Printf("Error encoding object: %s\n", err)
