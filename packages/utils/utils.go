@@ -74,7 +74,7 @@ func InitializeBlockchain(NumberOfBlocks int) *blockchainPkg.Blockchain {
 	return bc
 }
 
-func UploadMessageSize(blockchain blockchainPkg.Blockchain, blockNumber []int) ([]byte, int, error) {
+func CalculateMessageAndMessageSize(blockchain blockchainPkg.Blockchain, blockNumber []int) ([]byte, int, error) {
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
 
@@ -96,6 +96,7 @@ func PullDataFromSetup(ctx context.Context, setupTableName string) (
 	encodedBlockIDs int,
 	randomSeed int64,
 	numberOfBlocks int,
+	message []byte,
 	messageSize int,
 	err error) {
 
@@ -165,6 +166,11 @@ func PullDataFromSetup(ctx context.Context, setupTableName string) (
 		}
 	}
 
+	// Extracting Message
+	if v, ok := result.Item["message"].(*types.AttributeValueMemberB); ok {
+		message = v.Value
+	}
+
 	// Extracting MessageSize
 	if v, ok := result.Item["messageSize"].(*types.AttributeValueMemberN); ok {
 		messageSize, err = strconv.Atoi(v.Value)
@@ -177,20 +183,10 @@ func PullDataFromSetup(ctx context.Context, setupTableName string) (
 	return
 }
 
-func GenerateDroplet(blockchain blockchainPkg.Blockchain, blockNumber []int, param SetupParameters) []lubyTransform.LTBlock {
+func GenerateDroplet(message []byte, param SetupParameters) []lubyTransform.LTBlock {
 	fmt.Println("hey there from droplets")
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
-
-	if err := enc.Encode(blockchain); err != nil {
-		fmt.Printf("Error encoding object: %s\n", err)
-		return nil
-	}
-	var tempBlockchain []*blockchainPkg.Block
-	for _, blockNumber := range blockNumber {
-		tempBlockchain = append(tempBlockchain, &blockchain.Chain[blockNumber])
-	}
-	message := BlockToByte(tempBlockchain)
 
 	// Define parameters for the Luby Codec.
 	sourceBlocks := param.SourceBlocks
