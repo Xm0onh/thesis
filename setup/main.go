@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/gob"
 	"encoding/json"
@@ -13,6 +14,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go/aws"
 
 	blockchainPkg "github.com/xm0onh/thesis/packages/blockchain"
@@ -22,9 +24,26 @@ import (
 
 // var snsTopicARN = os.Getenv("STARTER_SNS_TOPIC_ARN")
 var tableName = os.Getenv("SETUP_DB")
-var blockchainTable = os.Getenv("BLOCKCHAIN_DB")
+var bucketName = os.Getenv("BLOCKCHAIN_S3_BUCKET")
 
 // var snsClient *sns.Client
+
+func uploadToS3(ctx context.Context, bucket, key string, data []byte) error {
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to load AWS configuration, %w", err)
+	}
+
+	s3Client := s3.NewFromConfig(cfg)
+
+	_, err = s3Client.PutObject(ctx, &s3.PutObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+		Body:   bytes.NewReader(data),
+	})
+
+	return err
+}
 
 func init() {
 	gob.Register(blockchainPkg.Transaction{})
@@ -56,6 +75,12 @@ func Handler(ctx context.Context, event utils.StartSignal) (string, error) {
 	if err != nil {
 		return "Failed to evaluate message size", err
 	}
+	objectKey := "blockchain_data"
+
+	err = uploadToS3(ctx, bucketName, objectKey, message)
+	if err != nil {
+		return "Failed to upload message to S3", err
+	}
 	// Add MessageSize into the Database
 	_, err = ddbClient.PutItem(ctx, &dynamodb.PutItemInput{
 		TableName: aws.String(tableName),
@@ -68,7 +93,7 @@ func Handler(ctx context.Context, event utils.StartSignal) (string, error) {
 			"numberOfBlocks":  &types.AttributeValueMemberN{Value: strconv.Itoa(event.NumberOfBlocks)},
 			"requestedBlocks": &types.AttributeValueMemberS{Value: fmt.Sprint(event.RequestedBlocks)},
 			"messageSize":     &types.AttributeValueMemberN{Value: strconv.Itoa(messageSize)},
-			"message":         &types.AttributeValueMemberB{Value: message},
+			"S3ObjectKey":     &types.AttributeValueMemberS{Value: objectKey},
 		},
 	})
 	if err != nil {
