@@ -40,6 +40,8 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 		fmt.Printf("Failed to pull data from setup: %v\n", err)
 		return err
 	}
+	fmt.Println("Received parameters from setup: ", param)
+
 	ddbClient := dynamodb.NewFromConfig(cfg)
 	blockchain := utils.InitializeBlockchain(param.NumberOfBlocks)
 	for _, record := range snsEvent.Records {
@@ -51,7 +53,7 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 			fmt.Printf("Failed to unmarshal LTBlock data: %v\n", err)
 			continue
 		}
-		droplets := utils.GenerateDroplet(*blockchain, dropletReq.BlockNumbers, param)
+		droplets := utils.GenerateDroplet(blockchain, dropletReq.BlockNumbers, param)
 		fmt.Println("Generated droplets: ", len(droplets))
 
 		// Uploading only the droplets within the range of start and end

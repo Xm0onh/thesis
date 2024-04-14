@@ -15,8 +15,10 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 )
 
-var snsTopicARN = os.Getenv("SNS_TOPIC_ARN")
-var tableName = os.Getenv("DDB_TABLE_NAME")
+var decoderStarterSNS = os.Getenv("DECODER_INIT_SNS_TOPIC_ARN")
+var counterTable = os.Getenv("COUNTER_TABLE_NAME")
+var commitmentSize = os.Getenv("COMMITMENT_SIZE")
+
 var ddbClient *dynamodb.Client
 var snsClient *sns.Client
 
@@ -34,10 +36,15 @@ func Handler(ctx context.Context, ddbEvent events.DynamoDBEvent) error {
 	for _, record := range ddbEvent.Records {
 		if record.EventName == "INSERT" {
 			updatedCounter := incrementCounter(ctx)
-			if updatedCounter >= 100 {
+			commitmentSizeInt, err := strconv.ParseInt(commitmentSize, 10, 64)
+			if err != nil {
+				fmt.Printf("Failed to parse commitment size: %v\n", err)
+				return err
+			}
+			if updatedCounter >= commitmentSizeInt {
 				_, err := snsClient.Publish(ctx, &sns.PublishInput{
-					Message:  aws.String("100 items reached in DynamoDB table"),
-					TopicArn: aws.String(snsTopicARN),
+					Message:  aws.String(commitmentSize + "items reached in DynamoDB table"),
+					TopicArn: aws.String(decoderStarterSNS),
 				})
 				if err != nil {
 					fmt.Printf("Error publishing to SNS: %v\n", err)
@@ -52,7 +59,7 @@ func Handler(ctx context.Context, ddbEvent events.DynamoDBEvent) error {
 
 func incrementCounter(ctx context.Context) int64 {
 	out, err := ddbClient.UpdateItem(ctx, &dynamodb.UpdateItemInput{
-		TableName: aws.String(tableName),
+		TableName: aws.String(counterTable),
 		Key: map[string]types.AttributeValue{
 			"ID": &types.AttributeValueMemberS{Value: "Counter"},
 		},

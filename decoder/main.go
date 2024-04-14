@@ -19,11 +19,10 @@ import (
 )
 
 var setupTableName = os.Getenv("SETUP_DB")
+var tableName = os.Getenv("DDB_TABLE_NAME")
 
 var Droplets []lubyTransform.LTBlock
-
 var ddbClient *dynamodb.Client
-var tableName = os.Getenv("DDB_TABLE_NAME")
 
 func init() {
 	gob.Register(blockchainPkg.Transaction{})
@@ -67,8 +66,10 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) ([]blockchainPkg.Blo
 
 	param := utils.SetupParameters{}
 	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, param.MessageSize, _ = utils.PullDataFromSetup(ctx, setupTableName)
-
+	// temporary:
+	param.MessageSize = 62058
 	fmt.Printf("Downloaded %d LTBlocks.\n", len(Droplets))
+	fmt.Println("Received parameters from setup: ", param)
 	return utils.Decoder(Droplets, param)
 }
 

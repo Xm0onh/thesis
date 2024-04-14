@@ -3,6 +3,6 @@ Counting the number of droplets.
 
 # ENV Variables in AWS:
 
-DDB_TABLE_NAME
-SNS_TOPIC_ARN
-
+COUNTER_TABLE_NAME
+DECODER_INIT_SNS_TOPIC_ARN
+COMMITMENT_SIZE
