@@ -22,6 +22,7 @@ import (
 
 // var snsTopicARN = os.Getenv("STARTER_SNS_TOPIC_ARN")
 var tableName = os.Getenv("SETUP_DB")
+var blockchainTable = os.Getenv("BLOCKCHAIN_DB")
 
 // var snsClient *sns.Client
 
@@ -51,7 +52,7 @@ func Handler(ctx context.Context, event utils.StartSignal) (string, error) {
 	seed := time.Now().UnixNano()
 	blockchain := utils.InitializeBlockchain(event.NumberOfBlocks)
 
-	messageSize, err := utils.UploadMessageSize(*blockchain, event.Blocks)
+	message, messageSize, err := utils.UploadMessageSize(*blockchain, event.RequestedBlocks)
 	if err != nil {
 		return "Failed to evaluate message size", err
 	}
@@ -65,8 +66,9 @@ func Handler(ctx context.Context, event utils.StartSignal) (string, error) {
 			"sourceBlocks":    &types.AttributeValueMemberN{Value: strconv.Itoa(sourceBlocks)},
 			"encodedBlockIDs": &types.AttributeValueMemberN{Value: strconv.Itoa(encodedBlockIDs)},
 			"numberOfBlocks":  &types.AttributeValueMemberN{Value: strconv.Itoa(event.NumberOfBlocks)},
-			"requestedBlocks": &types.AttributeValueMemberS{Value: fmt.Sprint(event.Blocks)},
+			"requestedBlocks": &types.AttributeValueMemberS{Value: fmt.Sprint(event.RequestedBlocks)},
 			"messageSize":     &types.AttributeValueMemberN{Value: strconv.Itoa(messageSize)},
+			"message":         &types.AttributeValueMemberB{Value: message},
 		},
 	})
 	if err != nil {
