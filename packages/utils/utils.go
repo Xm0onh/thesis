@@ -6,6 +6,7 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"math/rand"
 	"strconv"
@@ -13,6 +14,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go/aws"
 	blockchainPkg "github.com/xm0onh/thesis/packages/blockchain"
 	lubyTransform "github.com/xm0onh/thesis/packages/luby"
@@ -250,4 +252,46 @@ func Decoder(Droplets []lubyTransform.LTBlock, param SetupParameters) ([]blockch
 		fmt.Println("Not enough blocks to decode the message.")
 	}
 	return []blockchainPkg.Block{}, nil
+}
+
+func UploadToS3(ctx context.Context, bucket, key string, data []byte) error {
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to load AWS configuration, %w", err)
+	}
+
+	s3Client := s3.NewFromConfig(cfg)
+
+	_, err = s3Client.PutObject(ctx, &s3.PutObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+		Body:   bytes.NewReader(data),
+	})
+
+	return err
+}
+
+func DownloadFromS3(ctx context.Context, bucket, key string) ([]byte, error) {
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load AWS configuration, %w", err)
+	}
+
+	s3Client := s3.NewFromConfig(cfg)
+
+	resp, err := s3Client.GetObject(ctx, &s3.GetObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	})
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
