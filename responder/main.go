@@ -35,15 +35,13 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 		return fmt.Errorf("failed to load AWS configuration, %w", err)
 	}
 	param := utils.SetupParameters{}
-	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, _, err = utils.PullDataFromSetup(ctx, setupTableName)
+	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, param.Message, param.MessageSize, err = utils.PullDataFromSetup(ctx, setupTableName)
 	if err != nil {
 		fmt.Printf("Failed to pull data from setup: %v\n", err)
 		return err
 	}
-	fmt.Println("Received parameters from setup: ", param)
 
 	ddbClient := dynamodb.NewFromConfig(cfg)
-	blockchain := utils.InitializeBlockchain(param.NumberOfBlocks)
 	for _, record := range snsEvent.Records {
 		var dropletReq utils.RequestedDroplets
 
@@ -53,7 +51,7 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 			fmt.Printf("Failed to unmarshal LTBlock data: %v\n", err)
 			continue
 		}
-		droplets := utils.GenerateDroplet(blockchain, dropletReq.BlockNumbers, param)
+		droplets := utils.GenerateDroplet(param)
 		fmt.Println("Generated droplets: ", len(droplets))
 
 		// Uploading only the droplets within the range of start and end

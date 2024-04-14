@@ -65,11 +65,8 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) ([]blockchainPkg.Blo
 	}
 
 	param := utils.SetupParameters{}
-	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, param.MessageSize, _ = utils.PullDataFromSetup(ctx, setupTableName)
-	// temporary:
-	param.MessageSize = 62058
+	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, _, param.MessageSize, _ = utils.PullDataFromSetup(ctx, setupTableName)
 	fmt.Printf("Downloaded %d LTBlocks.\n", len(Droplets))
-	fmt.Println("Received parameters from setup: ", param)
 	return utils.Decoder(Droplets, param)
 }
 

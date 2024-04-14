@@ -7,7 +7,7 @@ require (
 	github.com/aws/aws-sdk-go v1.51.20
 	github.com/aws/aws-sdk-go-v2/config v1.27.11
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.31.1
-	github.com/xm0onh/thesis v0.2.5
+	github.com/xm0onh/thesis v0.2.8-0.20240414215154-c6405780f6d3
 )
 
 require (

@@ -52,7 +52,7 @@ func Handler(ctx context.Context, event utils.StartSignal) (string, error) {
 	seed := time.Now().UnixNano()
 	blockchain := utils.InitializeBlockchain(event.NumberOfBlocks)
 
-	message, messageSize, err := utils.UploadMessageSize(*blockchain, event.RequestedBlocks)
+	message, messageSize, err := utils.CalculateMessageAndMessageSize(*blockchain, event.RequestedBlocks)
 	if err != nil {
 		return "Failed to evaluate message size", err
 	}
