@@ -11,7 +11,6 @@ RESPONDER_ID
 ```JSON
 {
   "start": 0,
-  "end": 3,
-  "blockNumbers": [1,2,3,4]
+  "end": 3
 }
 ```
