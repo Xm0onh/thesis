@@ -197,65 +197,65 @@ func (bc *Blockchain) CalculateBlockchainSize() int {
 	return totalSize
 }
 
-func main() {
-	// Initialize blockchain
-	bc := Blockchain{}
+// func main() {
+// 	// Initialize blockchain
+// 	bc := Blockchain{}
 
-	// Simulate transaction data
-	transactions := GenerateTransactionsForBlock()
+// 	// Simulate transaction data
+// 	transactions := GenerateTransactionsForBlock()
 
-	// Add blocks to the blockchain
-	for i := 0; i < 100; i++ {
-		block := CreateBlock(i, transactions)
-		bc.AddBlock(block)
-	}
+// 	// Add blocks to the blockchain
+// 	for i := 0; i < 100; i++ {
+// 		block := CreateBlock(i, transactions)
+// 		bc.AddBlock(block)
+// 	}
 
-	// Print the blockchain data
-	for _, block := range bc.Chain {
-		log.Printf("Block %d, Hash: %s, PrevHash: %s, MerkleRoot: %s", block.Index, block.Hash, block.PrevHash, hex.EncodeToString(block.MerkleRoot))
+// 	// Print the blockchain data
+// 	for _, block := range bc.Chain {
+// 		log.Printf("Block %d, Hash: %s, PrevHash: %s, MerkleRoot: %s", block.Index, block.Hash, block.PrevHash, hex.EncodeToString(block.MerkleRoot))
 
-		// // Verify the entire tree (hashes for each node) is valid
-		// t, err := merkletree.NewTree(block.Transactions)
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// vt, err := t.VerifyTree()
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// log.Println("Verify Tree: ", vt)
+// 		// // Verify the entire tree (hashes for each node) is valid
+// 		// t, err := merkletree.NewTree(block.Transactions)
+// 		// if err != nil {
+// 		// 	log.Fatal(err)
+// 		// }
+// 		// vt, err := t.VerifyTree()
+// 		// if err != nil {
+// 		// 	log.Fatal(err)
+// 		// }
+// 		// log.Println("Verify Tree: ", vt)
 
-		// // Verify a specific content in in the tree
-		// for _, tx := range block.Transactions {
-		// 	vc, err := t.VerifyContent(tx)
-		// 	if err != nil {
-		// 		log.Fatal(err)
-		// 	}
-		// 	log.Println("Verify Content: ", vc)
-		// }
-	}
+// 		// // Verify a specific content in in the tree
+// 		// for _, tx := range block.Transactions {
+// 		// 	vc, err := t.VerifyContent(tx)
+// 		// 	if err != nil {
+// 		// 		log.Fatal(err)
+// 		// 	}
+// 		// 	log.Println("Verify Content: ", vc)
+// 		// }
+// 	}
 
-	tempBlock := bc.Chain[50]
-	// Verify the entire tree (hashes for each node) is valid
-	t, err := merkletree.NewTree(tempBlock.Transactions)
-	if err != nil {
-		log.Fatal(err)
-	}
-	vt, err := t.VerifyTree()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println("Verify Tree: ", vt)
+// 	tempBlock := bc.Chain[50]
+// 	// Verify the entire tree (hashes for each node) is valid
+// 	t, err := merkletree.NewTree(tempBlock.Transactions)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	vt, err := t.VerifyTree()
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	log.Println("Verify Tree: ", vt)
 
-	// checking out specific transaction within the block
+// 	// checking out specific transaction within the block
 
-	// Verify a specific content in in the tree
-	tempTxn := tempBlock.Transactions[123]
-	vc, err := t.VerifyContent(tempTxn)
-	if err != nil {
-		log.Fatal(err)
-	}
+// 	// Verify a specific content in in the tree
+// 	tempTxn := tempBlock.Transactions[123]
+// 	vc, err := t.VerifyContent(tempTxn)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
 
-	log.Println("Verify Content: ", vc)
+// 	log.Println("Verify Content: ", vc)
 
-}
+// }

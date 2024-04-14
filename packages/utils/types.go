@@ -14,9 +14,8 @@ type RequestedBlocks struct {
 }
 
 type RequestedDroplets struct {
-	Start        int   `json:"start"`
-	End          int   `json:"end"`
-	BlockNumbers []int `json:"blockNumbers"`
+	Start int `json:"start"`
+	End   int `json:"end"`
 }
 
 type SetupParameters struct {
@@ -26,6 +25,7 @@ type SetupParameters struct {
 	EncodedBlockIDs int       `json:"encodedBlockIDs"`
 	NumberOfBlocks  int       `json:"numberOfBlocks"`
 	MessageSize     int       `json:"messageSize"`
+	Message         []byte    `json:"message"`
 }
 
 type StartSignal struct {
@@ -33,5 +33,5 @@ type StartSignal struct {
 	SourceBlocks    int   `json:"sourceBlocks"`
 	EncodedBlockIDs int   `json:"encodedBlockIDs"`
 	NumberOfBlocks  int   `json:"numberOfBlocks"`
-	Blocks          []int `json:"blocks"`
+	RequestedBlocks []int `json:"requestedBlocks"`
 }

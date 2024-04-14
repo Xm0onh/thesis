@@ -74,20 +74,20 @@ func InitializeBlockchain(NumberOfBlocks int) *blockchainPkg.Blockchain {
 	return bc
 }
 
-func UploadMessageSize(blockchain blockchainPkg.Blockchain, blockNumber []int) (int, error) {
+func UploadMessageSize(blockchain blockchainPkg.Blockchain, blockNumber []int) ([]byte, int, error) {
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
 
 	if err := enc.Encode(blockchain); err != nil {
 		fmt.Printf("Error encoding object: %s\n", err)
-		return 0, err
+		return []byte{0}, 0, err
 	}
 	var tempBlockchain []*blockchainPkg.Block
 	for _, blockNumber := range blockNumber {
 		tempBlockchain = append(tempBlockchain, &blockchain.Chain[blockNumber])
 	}
 	message := BlockToByte(tempBlockchain)
-	return len(message), nil
+	return message, len(message), nil
 }
 
 func PullDataFromSetup(ctx context.Context, setupTableName string) (
