@@ -41,7 +41,7 @@ func Handler(ctx context.Context, ddbEvent events.DynamoDBEvent) error {
 				fmt.Printf("Failed to parse commitment size: %v\n", err)
 				return err
 			}
-			if updatedCounter >= commitmentSizeInt {
+			if updatedCounter == commitmentSizeInt {
 				_, err := snsClient.Publish(ctx, &sns.PublishInput{
 					Message:  aws.String(commitmentSize + "items reached in DynamoDB table"),
 					TopicArn: aws.String(decoderStarterSNS),
