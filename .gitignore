@@ -5,3 +5,7 @@
 *.DS_Store
 
 bootstrap
+
+venv
+responder_configurations.yaml
+
