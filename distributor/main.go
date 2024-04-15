@@ -22,7 +22,6 @@ type Message struct {
 
 func invokeTimeKeeper(lambdaClient *lambdasdk.Client) {
 
-	// Payload could be modified or left empty as per your requirements
 	payload := []byte(`{}`)
 	result, err := lambdaClient.Invoke(context.TODO(), &lambdasdk.InvokeInput{
 		FunctionName: aws.String("arn:aws:lambda:us-west-1:428232754477:function:TimeKeeper"),
@@ -107,7 +106,7 @@ func handler(ctx context.Context, event StartEvent) {
 		go publishMessage(snsClient, topicArn, msg, &wg)
 	}
 
-	wg.Wait() // Wait for all goroutines to complete
+	wg.Wait()
 }
 
 func main() {
