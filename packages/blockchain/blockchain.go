@@ -17,8 +17,6 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-const TransactionsPerBlock = 200
-
 type Block struct {
 	Index        int
 	Timestamp    string
@@ -142,7 +140,7 @@ func CreateBlock(index int, transactions []merkletree.Content) Block {
 	}
 }
 
-func GenerateTransactionsForBlock() []merkletree.Content {
+func GenerateTransactionsForBlock(TransactionsPerBlock int) []merkletree.Content {
 	var transactions []merkletree.Content
 	SenderAddress, _ := GenerateEthereumAddress()
 	ReceiverAddress, _ := GenerateEthereumAddress()

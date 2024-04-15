@@ -62,11 +62,11 @@ func BytesToBlockchain(data []byte) *blockchainPkg.Blockchain {
 	return &bc
 }
 
-func InitializeBlockchain(NumberOfBlocks int) *blockchainPkg.Blockchain {
+func InitializeBlockchain(NumberOfBlocks int, TransactionsPerBlock int) *blockchainPkg.Blockchain {
 	bc := &blockchainPkg.Blockchain{}
 
 	// Simulate transaction data
-	transactions := blockchainPkg.GenerateTransactionsForBlock()
+	transactions := blockchainPkg.GenerateTransactionsForBlock(TransactionsPerBlock)
 	// Add blocks to the blockchain
 	for i := 0; i < NumberOfBlocks; i++ {
 		block := blockchainPkg.CreateBlock(i, transactions)
