@@ -163,6 +163,2412 @@ Resources:
 
 
 
+
+
+############################
+  ##########################
+  ##   Lambda Functions 6 ##
+  ##########################
+  ResponderFunction6:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 6
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 6 ##
+  ###################
+  Responder6:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder6
+      TopicName: Responder6Topic
+
+  ###########################
+  ##   SNS Subscriptions 6 ##
+  ###########################
+
+  Responder6SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder6
+      Endpoint: !GetAtt ResponderFunction6.Arn
+
+  LambdaInvokePermission6:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction6.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder6
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 7 ##
+  ##########################
+  ResponderFunction7:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 7
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 7 ##
+  ###################
+  Responder7:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder7
+      TopicName: Responder7Topic
+
+  ###########################
+  ##   SNS Subscriptions 7 ##
+  ###########################
+
+  Responder7SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder7
+      Endpoint: !GetAtt ResponderFunction7.Arn
+
+  LambdaInvokePermission7:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction7.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder7
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 8 ##
+  ##########################
+  ResponderFunction8:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 8
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 8 ##
+  ###################
+  Responder8:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder8
+      TopicName: Responder8Topic
+
+  ###########################
+  ##   SNS Subscriptions 8 ##
+  ###########################
+
+  Responder8SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder8
+      Endpoint: !GetAtt ResponderFunction8.Arn
+
+  LambdaInvokePermission8:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction8.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder8
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 9 ##
+  ##########################
+  ResponderFunction9:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 9
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 9 ##
+  ###################
+  Responder9:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder9
+      TopicName: Responder9Topic
+
+  ###########################
+  ##   SNS Subscriptions 9 ##
+  ###########################
+
+  Responder9SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder9
+      Endpoint: !GetAtt ResponderFunction9.Arn
+
+  LambdaInvokePermission9:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction9.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder9
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 10 ##
+  ##########################
+  ResponderFunction10:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 10
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 10 ##
+  ###################
+  Responder10:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder10
+      TopicName: Responder10Topic
+
+  ###########################
+  ##   SNS Subscriptions 10 ##
+  ###########################
+
+  Responder10SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder10
+      Endpoint: !GetAtt ResponderFunction10.Arn
+
+  LambdaInvokePermission10:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction10.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder10
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 11 ##
+  ##########################
+  ResponderFunction11:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 11
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 11 ##
+  ###################
+  Responder11:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder11
+      TopicName: Responder11Topic
+
+  ###########################
+  ##   SNS Subscriptions 11 ##
+  ###########################
+
+  Responder11SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder11
+      Endpoint: !GetAtt ResponderFunction11.Arn
+
+  LambdaInvokePermission11:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction11.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder11
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 12 ##
+  ##########################
+  ResponderFunction12:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 12
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 12 ##
+  ###################
+  Responder12:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder12
+      TopicName: Responder12Topic
+
+  ###########################
+  ##   SNS Subscriptions 12 ##
+  ###########################
+
+  Responder12SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder12
+      Endpoint: !GetAtt ResponderFunction12.Arn
+
+  LambdaInvokePermission12:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction12.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder12
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 13 ##
+  ##########################
+  ResponderFunction13:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 13
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 13 ##
+  ###################
+  Responder13:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder13
+      TopicName: Responder13Topic
+
+  ###########################
+  ##   SNS Subscriptions 13 ##
+  ###########################
+
+  Responder13SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder13
+      Endpoint: !GetAtt ResponderFunction13.Arn
+
+  LambdaInvokePermission13:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction13.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder13
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 14 ##
+  ##########################
+  ResponderFunction14:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 14
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 14 ##
+  ###################
+  Responder14:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder14
+      TopicName: Responder14Topic
+
+  ###########################
+  ##   SNS Subscriptions 14 ##
+  ###########################
+
+  Responder14SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder14
+      Endpoint: !GetAtt ResponderFunction14.Arn
+
+  LambdaInvokePermission14:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction14.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder14
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 15 ##
+  ##########################
+  ResponderFunction15:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 15
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 15 ##
+  ###################
+  Responder15:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder15
+      TopicName: Responder15Topic
+
+  ###########################
+  ##   SNS Subscriptions 15 ##
+  ###########################
+
+  Responder15SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder15
+      Endpoint: !GetAtt ResponderFunction15.Arn
+
+  LambdaInvokePermission15:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction15.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder15
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 16 ##
+  ##########################
+  ResponderFunction16:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 16
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 16 ##
+  ###################
+  Responder16:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder16
+      TopicName: Responder16Topic
+
+  ###########################
+  ##   SNS Subscriptions 16 ##
+  ###########################
+
+  Responder16SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder16
+      Endpoint: !GetAtt ResponderFunction16.Arn
+
+  LambdaInvokePermission16:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction16.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder16
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 17 ##
+  ##########################
+  ResponderFunction17:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 17
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 17 ##
+  ###################
+  Responder17:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder17
+      TopicName: Responder17Topic
+
+  ###########################
+  ##   SNS Subscriptions 17 ##
+  ###########################
+
+  Responder17SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder17
+      Endpoint: !GetAtt ResponderFunction17.Arn
+
+  LambdaInvokePermission17:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction17.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder17
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 18 ##
+  ##########################
+  ResponderFunction18:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 18
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 18 ##
+  ###################
+  Responder18:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder18
+      TopicName: Responder18Topic
+
+  ###########################
+  ##   SNS Subscriptions 18 ##
+  ###########################
+
+  Responder18SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder18
+      Endpoint: !GetAtt ResponderFunction18.Arn
+
+  LambdaInvokePermission18:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction18.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder18
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 19 ##
+  ##########################
+  ResponderFunction19:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 19
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 19 ##
+  ###################
+  Responder19:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder19
+      TopicName: Responder19Topic
+
+  ###########################
+  ##   SNS Subscriptions 19 ##
+  ###########################
+
+  Responder19SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder19
+      Endpoint: !GetAtt ResponderFunction19.Arn
+
+  LambdaInvokePermission19:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction19.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder19
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 20 ##
+  ##########################
+  ResponderFunction20:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 20
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 20 ##
+  ###################
+  Responder20:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder20
+      TopicName: Responder20Topic
+
+  ###########################
+  ##   SNS Subscriptions 20 ##
+  ###########################
+
+  Responder20SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder20
+      Endpoint: !GetAtt ResponderFunction20.Arn
+
+  LambdaInvokePermission20:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction20.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder20
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 21 ##
+  ##########################
+  ResponderFunction21:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 21
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 21 ##
+  ###################
+  Responder21:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder21
+      TopicName: Responder21Topic
+
+  ###########################
+  ##   SNS Subscriptions 21 ##
+  ###########################
+
+  Responder21SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder21
+      Endpoint: !GetAtt ResponderFunction21.Arn
+
+  LambdaInvokePermission21:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction21.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder21
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 22 ##
+  ##########################
+  ResponderFunction22:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 22
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 22 ##
+  ###################
+  Responder22:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder22
+      TopicName: Responder22Topic
+
+  ###########################
+  ##   SNS Subscriptions 22 ##
+  ###########################
+
+  Responder22SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder22
+      Endpoint: !GetAtt ResponderFunction22.Arn
+
+  LambdaInvokePermission22:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction22.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder22
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 23 ##
+  ##########################
+  ResponderFunction23:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 23
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 23 ##
+  ###################
+  Responder23:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder23
+      TopicName: Responder23Topic
+
+  ###########################
+  ##   SNS Subscriptions 23 ##
+  ###########################
+
+  Responder23SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder23
+      Endpoint: !GetAtt ResponderFunction23.Arn
+
+  LambdaInvokePermission23:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction23.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder23
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 24 ##
+  ##########################
+  ResponderFunction24:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 24
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 24 ##
+  ###################
+  Responder24:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder24
+      TopicName: Responder24Topic
+
+  ###########################
+  ##   SNS Subscriptions 24 ##
+  ###########################
+
+  Responder24SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder24
+      Endpoint: !GetAtt ResponderFunction24.Arn
+
+  LambdaInvokePermission24:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction24.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder24
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 25 ##
+  ##########################
+  ResponderFunction25:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 25
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 25 ##
+  ###################
+  Responder25:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder25
+      TopicName: Responder25Topic
+
+  ###########################
+  ##   SNS Subscriptions 25 ##
+  ###########################
+
+  Responder25SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder25
+      Endpoint: !GetAtt ResponderFunction25.Arn
+
+  LambdaInvokePermission25:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction25.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder25
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 26 ##
+  ##########################
+  ResponderFunction26:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 26
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 26 ##
+  ###################
+  Responder26:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder26
+      TopicName: Responder26Topic
+
+  ###########################
+  ##   SNS Subscriptions 26 ##
+  ###########################
+
+  Responder26SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder26
+      Endpoint: !GetAtt ResponderFunction26.Arn
+
+  LambdaInvokePermission26:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction26.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder26
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 27 ##
+  ##########################
+  ResponderFunction27:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 27
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 27 ##
+  ###################
+  Responder27:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder27
+      TopicName: Responder27Topic
+
+  ###########################
+  ##   SNS Subscriptions 27 ##
+  ###########################
+
+  Responder27SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder27
+      Endpoint: !GetAtt ResponderFunction27.Arn
+
+  LambdaInvokePermission27:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction27.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder27
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 28 ##
+  ##########################
+  ResponderFunction28:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 28
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 28 ##
+  ###################
+  Responder28:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder28
+      TopicName: Responder28Topic
+
+  ###########################
+  ##   SNS Subscriptions 28 ##
+  ###########################
+
+  Responder28SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder28
+      Endpoint: !GetAtt ResponderFunction28.Arn
+
+  LambdaInvokePermission28:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction28.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder28
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 29 ##
+  ##########################
+  ResponderFunction29:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 29
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 29 ##
+  ###################
+  Responder29:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder29
+      TopicName: Responder29Topic
+
+  ###########################
+  ##   SNS Subscriptions 29 ##
+  ###########################
+
+  Responder29SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder29
+      Endpoint: !GetAtt ResponderFunction29.Arn
+
+  LambdaInvokePermission29:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction29.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder29
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 30 ##
+  ##########################
+  ResponderFunction30:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 30
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 30 ##
+  ###################
+  Responder30:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder30
+      TopicName: Responder30Topic
+
+  ###########################
+  ##   SNS Subscriptions 30 ##
+  ###########################
+
+  Responder30SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder30
+      Endpoint: !GetAtt ResponderFunction30.Arn
+
+  LambdaInvokePermission30:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction30.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder30
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 31 ##
+  ##########################
+  ResponderFunction31:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 31
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 31 ##
+  ###################
+  Responder31:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder31
+      TopicName: Responder31Topic
+
+  ###########################
+  ##   SNS Subscriptions 31 ##
+  ###########################
+
+  Responder31SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder31
+      Endpoint: !GetAtt ResponderFunction31.Arn
+
+  LambdaInvokePermission31:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction31.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder31
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 32 ##
+  ##########################
+  ResponderFunction32:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 32
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 32 ##
+  ###################
+  Responder32:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder32
+      TopicName: Responder32Topic
+
+  ###########################
+  ##   SNS Subscriptions 32 ##
+  ###########################
+
+  Responder32SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder32
+      Endpoint: !GetAtt ResponderFunction32.Arn
+
+  LambdaInvokePermission32:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction32.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder32
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 33 ##
+  ##########################
+  ResponderFunction33:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 33
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 33 ##
+  ###################
+  Responder33:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder33
+      TopicName: Responder33Topic
+
+  ###########################
+  ##   SNS Subscriptions 33 ##
+  ###########################
+
+  Responder33SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder33
+      Endpoint: !GetAtt ResponderFunction33.Arn
+
+  LambdaInvokePermission33:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction33.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder33
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 34 ##
+  ##########################
+  ResponderFunction34:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 34
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 34 ##
+  ###################
+  Responder34:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder34
+      TopicName: Responder34Topic
+
+  ###########################
+  ##   SNS Subscriptions 34 ##
+  ###########################
+
+  Responder34SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder34
+      Endpoint: !GetAtt ResponderFunction34.Arn
+
+  LambdaInvokePermission34:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction34.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder34
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 35 ##
+  ##########################
+  ResponderFunction35:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 35
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 35 ##
+  ###################
+  Responder35:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder35
+      TopicName: Responder35Topic
+
+  ###########################
+  ##   SNS Subscriptions 35 ##
+  ###########################
+
+  Responder35SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder35
+      Endpoint: !GetAtt ResponderFunction35.Arn
+
+  LambdaInvokePermission35:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction35.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder35
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 36 ##
+  ##########################
+  ResponderFunction36:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 36
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 36 ##
+  ###################
+  Responder36:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder36
+      TopicName: Responder36Topic
+
+  ###########################
+  ##   SNS Subscriptions 36 ##
+  ###########################
+
+  Responder36SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder36
+      Endpoint: !GetAtt ResponderFunction36.Arn
+
+  LambdaInvokePermission36:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction36.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder36
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 37 ##
+  ##########################
+  ResponderFunction37:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 37
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 37 ##
+  ###################
+  Responder37:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder37
+      TopicName: Responder37Topic
+
+  ###########################
+  ##   SNS Subscriptions 37 ##
+  ###########################
+
+  Responder37SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder37
+      Endpoint: !GetAtt ResponderFunction37.Arn
+
+  LambdaInvokePermission37:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction37.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder37
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 38 ##
+  ##########################
+  ResponderFunction38:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 38
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 38 ##
+  ###################
+  Responder38:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder38
+      TopicName: Responder38Topic
+
+  ###########################
+  ##   SNS Subscriptions 38 ##
+  ###########################
+
+  Responder38SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder38
+      Endpoint: !GetAtt ResponderFunction38.Arn
+
+  LambdaInvokePermission38:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction38.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder38
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 39 ##
+  ##########################
+  ResponderFunction39:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 39
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 39 ##
+  ###################
+  Responder39:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder39
+      TopicName: Responder39Topic
+
+  ###########################
+  ##   SNS Subscriptions 39 ##
+  ###########################
+
+  Responder39SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder39
+      Endpoint: !GetAtt ResponderFunction39.Arn
+
+  LambdaInvokePermission39:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction39.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder39
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 40 ##
+  ##########################
+  ResponderFunction40:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 40
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 40 ##
+  ###################
+  Responder40:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder40
+      TopicName: Responder40Topic
+
+  ###########################
+  ##   SNS Subscriptions 40 ##
+  ###########################
+
+  Responder40SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder40
+      Endpoint: !GetAtt ResponderFunction40.Arn
+
+  LambdaInvokePermission40:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction40.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder40
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 41 ##
+  ##########################
+  ResponderFunction41:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 41
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 41 ##
+  ###################
+  Responder41:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder41
+      TopicName: Responder41Topic
+
+  ###########################
+  ##   SNS Subscriptions 41 ##
+  ###########################
+
+  Responder41SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder41
+      Endpoint: !GetAtt ResponderFunction41.Arn
+
+  LambdaInvokePermission41:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction41.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder41
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 42 ##
+  ##########################
+  ResponderFunction42:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 42
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 42 ##
+  ###################
+  Responder42:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder42
+      TopicName: Responder42Topic
+
+  ###########################
+  ##   SNS Subscriptions 42 ##
+  ###########################
+
+  Responder42SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder42
+      Endpoint: !GetAtt ResponderFunction42.Arn
+
+  LambdaInvokePermission42:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction42.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder42
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 43 ##
+  ##########################
+  ResponderFunction43:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 43
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 43 ##
+  ###################
+  Responder43:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder43
+      TopicName: Responder43Topic
+
+  ###########################
+  ##   SNS Subscriptions 43 ##
+  ###########################
+
+  Responder43SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder43
+      Endpoint: !GetAtt ResponderFunction43.Arn
+
+  LambdaInvokePermission43:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction43.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder43
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 44 ##
+  ##########################
+  ResponderFunction44:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 44
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 44 ##
+  ###################
+  Responder44:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder44
+      TopicName: Responder44Topic
+
+  ###########################
+  ##   SNS Subscriptions 44 ##
+  ###########################
+
+  Responder44SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder44
+      Endpoint: !GetAtt ResponderFunction44.Arn
+
+  LambdaInvokePermission44:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction44.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder44
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 45 ##
+  ##########################
+  ResponderFunction45:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 45
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 45 ##
+  ###################
+  Responder45:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder45
+      TopicName: Responder45Topic
+
+  ###########################
+  ##   SNS Subscriptions 45 ##
+  ###########################
+
+  Responder45SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder45
+      Endpoint: !GetAtt ResponderFunction45.Arn
+
+  LambdaInvokePermission45:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction45.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder45
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 46 ##
+  ##########################
+  ResponderFunction46:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 46
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 46 ##
+  ###################
+  Responder46:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder46
+      TopicName: Responder46Topic
+
+  ###########################
+  ##   SNS Subscriptions 46 ##
+  ###########################
+
+  Responder46SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder46
+      Endpoint: !GetAtt ResponderFunction46.Arn
+
+  LambdaInvokePermission46:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction46.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder46
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 47 ##
+  ##########################
+  ResponderFunction47:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 47
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 47 ##
+  ###################
+  Responder47:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder47
+      TopicName: Responder47Topic
+
+  ###########################
+  ##   SNS Subscriptions 47 ##
+  ###########################
+
+  Responder47SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder47
+      Endpoint: !GetAtt ResponderFunction47.Arn
+
+  LambdaInvokePermission47:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction47.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder47
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 48 ##
+  ##########################
+  ResponderFunction48:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 48
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 48 ##
+  ###################
+  Responder48:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder48
+      TopicName: Responder48Topic
+
+  ###########################
+  ##   SNS Subscriptions 48 ##
+  ###########################
+
+  Responder48SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder48
+      Endpoint: !GetAtt ResponderFunction48.Arn
+
+  LambdaInvokePermission48:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction48.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder48
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 49 ##
+  ##########################
+  ResponderFunction49:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 49
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 49 ##
+  ###################
+  Responder49:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder49
+      TopicName: Responder49Topic
+
+  ###########################
+  ##   SNS Subscriptions 49 ##
+  ###########################
+
+  Responder49SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder49
+      Endpoint: !GetAtt ResponderFunction49.Arn
+
+  LambdaInvokePermission49:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction49.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder49
+############################
+
+
+############################
+  ##########################
+  ##   Lambda Functions 50 ##
+  ##########################
+  ResponderFunction50:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: responder.zip
+      Environment:
+        Variables:
+          DDB_TABLE_NAME: droplets
+          BLOCKCHAIN_S3_BUCKET: thesisubc
+          RESPONDER_ID: 50
+          SETUP_DB: setup
+      MemorySize: 3006
+      Timeout: 900
+
+  ###################
+  ##   SNS Topic 50 ##
+  ###################
+  Responder50:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: Responder50
+      TopicName: Responder50Topic
+
+  ###########################
+  ##   SNS Subscriptions 50 ##
+  ###########################
+
+  Responder50SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn: !Ref Responder50
+      Endpoint: !GetAtt ResponderFunction50.Arn
+
+  LambdaInvokePermission50:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResponderFunction50.Arn
+      Principal: "sns.amazonaws.com"
+      SourceArn: !Ref Responder50
+############################
+
+
+  DistributorFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: main
+      Runtime: provided.al2023
+      Role: !GetAtt ResponderLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: thesisubc
+        S3Key: distributor.zip
+      Environment:
+        Variables:
+          RESPONDER_3: !Ref Responder3
+          RESPONDER_4: !Ref Responder4
+          RESPONDER_5: !Ref Responder5
+          RESPONDER_6: !Ref Responder6
+          RESPONDER_7: !Ref Responder7
+          RESPONDER_8: !Ref Responder8
+          RESPONDER_9: !Ref Responder9
+          RESPONDER_10: !Ref Responder10
+          RESPONDER_11: !Ref Responder11
+          RESPONDER_12: !Ref Responder12
+          RESPONDER_13: !Ref Responder13
+          RESPONDER_14: !Ref Responder14
+          RESPONDER_15: !Ref Responder15
+          RESPONDER_16: !Ref Responder16
+          RESPONDER_17: !Ref Responder17
+          RESPONDER_18: !Ref Responder18
+          RESPONDER_19: !Ref Responder19
+          RESPONDER_20: !Ref Responder20
+          RESPONDER_21: !Ref Responder21
+          RESPONDER_22: !Ref Responder22
+          RESPONDER_23: !Ref Responder23
+          RESPONDER_24: !Ref Responder24
+          RESPONDER_25: !Ref Responder25
+          RESPONDER_26: !Ref Responder26
+          RESPONDER_27: !Ref Responder27
+          RESPONDER_28: !Ref Responder28
+          RESPONDER_29: !Ref Responder29
+          RESPONDER_30: !Ref Responder30
+          RESPONDER_31: !Ref Responder31
+          RESPONDER_32: !Ref Responder32
+          RESPONDER_33: !Ref Responder33
+          RESPONDER_34: !Ref Responder34
+          RESPONDER_35: !Ref Responder35
+          RESPONDER_36: !Ref Responder36
+          RESPONDER_37: !Ref Responder37
+          RESPONDER_38: !Ref Responder38
+          RESPONDER_39: !Ref Responder39
+          RESPONDER_40: !Ref Responder40
+          RESPONDER_41: !Ref Responder41
+          RESPONDER_42: !Ref Responder42
+          RESPONDER_43: !Ref Responder43
+          RESPONDER_44: !Ref Responder44
+          RESPONDER_45: !Ref Responder45
+          RESPONDER_46: !Ref Responder46
+          RESPONDER_47: !Ref Responder47
+          RESPONDER_48: !Ref Responder48
+          RESPONDER_49: !Ref Responder49
+          RESPONDER_50: !Ref Responder50
+      MemorySize: 3006
+      Timeout: 900
+
+
+
 ### POLICIES
 
   ResponderLambdaExecutionRole:

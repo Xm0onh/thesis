@@ -58,7 +58,7 @@ template = jinja2.Template(template_text)
 
 
 with open("responder_configurations.yaml", "w") as f:
-    for i in range(4, 6):  
+    for i in range(6, 51):  
         f.write(template.render(responder_id=i))
         f.write("\n\n")  
 

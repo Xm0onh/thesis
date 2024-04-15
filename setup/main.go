@@ -50,7 +50,7 @@ func Handler(ctx context.Context, event utils.StartSignal) (string, error) {
 	degreeCDFString, _ := json.Marshal(degreeCDF)
 	// Create a PRNG source.
 	seed := time.Now().UnixNano()
-	blockchain := utils.InitializeBlockchain(event.NumberOfBlocks)
+	blockchain := utils.InitializeBlockchain(event.NumberOfBlocks, 1000)
 
 	message, messageSize, err := utils.CalculateMessageAndMessageSize(*blockchain, event.RequestedBlocks)
 	if err != nil {
