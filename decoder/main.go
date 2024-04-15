@@ -70,7 +70,7 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) (bool, error) {
 	param := utils.SetupParameters{}
 	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, _, param.MessageSize, _ = utils.PullDataFromSetup(ctx, setupTableName)
 	fmt.Printf("Downloaded %d LTBlocks.\n", len(Droplets))
-	fmt.Println(utils.Decoder(Droplets, param))
+
 	/// Submit the time to the time keeper table
 	_, err := ddbClient.PutItem(ctx, &dynamodb.PutItemInput{
 		TableName: aws.String(timeKeeperTable),
@@ -83,6 +83,7 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) (bool, error) {
 		fmt.Printf("Failed to submit time to time keeper table: %v\n", err)
 		return false, err
 	}
+	fmt.Println("Successfully Decoded the blocks.")
 	return true, nil
 }
 

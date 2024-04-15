@@ -22,6 +22,7 @@ import (
 var ddbTableName = os.Getenv("DDB_TABLE_NAME")
 var setupTableName = os.Getenv("SETUP_DB")
 var responderID = os.Getenv("RESPONDER_ID")
+var bucketName = os.Getenv("BLOCKCHAIN_S3_BUCKET")
 
 func init() {
 	gob.Register(blockchainPkg.Transaction{})
@@ -35,12 +36,12 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 		return fmt.Errorf("failed to load AWS configuration, %w", err)
 	}
 	param := utils.SetupParameters{}
-	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, param.Message, param.MessageSize, err = utils.PullDataFromSetup(ctx, setupTableName)
+	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, _, param.MessageSize, err = utils.PullDataFromSetup(ctx, setupTableName)
 	if err != nil {
 		fmt.Printf("Failed to pull data from setup: %v\n", err)
 		return err
 	}
-
+	param.Message, _ = utils.DownloadFromS3(ctx, bucketName, "blockchain_data")
 	ddbClient := dynamodb.NewFromConfig(cfg)
 	for _, record := range snsEvent.Records {
 		var dropletReq utils.RequestedDroplets
