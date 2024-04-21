@@ -30,7 +30,8 @@ import (
 var setupTableName = os.Getenv("SETUP_DB")
 var tableName = os.Getenv("DDB_TABLE_NAME")
 var timeKeeperTable = os.Getenv("TIME_KEEPER_TABLE")
-var bucketName = os.Getenv("BLOCKCHAIN_S3_BUCKET")
+
+// var bucketName = os.Getenv("BLOCKCHAIN_S3_BUCKET")
 
 var Droplets []lubyTransform.LTBlock
 var ddbClient *dynamodb.Client
@@ -148,17 +149,9 @@ func PullKZGData(ctx context.Context, setupTableName string) (
 	digest = bn254.G1Affine{}
 	digest.Unmarshal(digestData)
 
-	if err != nil {
-		return nil, bn254.G1Affine{}, fr.Element{}, kzg.OpeningProof{}, fmt.Errorf("failed to deserialize Digest: %v", err)
-	}
-
 	// Deserialize Point
 	pointData := result.Item["point"].(*types.AttributeValueMemberB).Value
 	point.Unmarshal(pointData)
-
-	if err != nil {
-		return nil, bn254.G1Affine{}, fr.Element{}, kzg.OpeningProof{}, fmt.Errorf("failed to deserialize Point: %v", err)
-	}
 
 	// Deserialize Proof
 	proofData := result.Item["proof"].(*types.AttributeValueMemberB).Value
