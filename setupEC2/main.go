@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/gob"
 	"encoding/json"
@@ -9,10 +10,11 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 
 	blockchainPkg "github.com/xm0onh/thesis/packages/blockchain"
 	kzg "github.com/xm0onh/thesis/packages/kzg"
@@ -48,6 +50,7 @@ func main() {
 	}
 
 	ddbClient := dynamodb.NewFromConfig(cfg)
+	s3Client := s3.NewFromConfig(cfg)
 
 	degreeCDF := lubyTransform.SolitonDistribution(event.SourceBlocks)
 	degreeCDFString, _ := json.Marshal(degreeCDF)
@@ -62,7 +65,7 @@ func main() {
 	}
 
 	objectKey := "blockchain_data"
-	err = utils.UploadToS3(ctx, bucketName, objectKey, message)
+	err = uploadToS3(ctx, s3Client, bucketName, objectKey, message)
 	if err != nil {
 		fmt.Printf("Failed to upload message to S3: %v\n", err)
 		return
@@ -101,4 +104,14 @@ func main() {
 	}
 
 	fmt.Println("Process completed successfully!")
+}
+
+// uploadToS3 uploads a byte slice to an S3 bucket under the specified key
+func uploadToS3(ctx context.Context, client *s3.Client, bucket, key string, data []byte) error {
+	_, err := client.PutObject(ctx, &s3.PutObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+		Body:   bytes.NewReader(data),
+	})
+	return err
 }
