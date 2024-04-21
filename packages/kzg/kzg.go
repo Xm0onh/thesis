@@ -1,6 +1,7 @@
 package kzg
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"log"
@@ -9,6 +10,8 @@ import (
 	"time"
 
 	kzg "github.com/arnaucube/kzg-commitments-study"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go/aws"
 	gthCrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/crypto/bn256"
 	poly "github.com/georgercarder/polynomial"
@@ -16,7 +19,17 @@ import (
 	utils "github.com/xm0onh/thesis/packages/utils"
 )
 
-func CalculateKZGParam(ctx context.Context, bucket string, droplets []lubyTransform.LTBlock) {
+func UploadToS3(ctx context.Context, s3Client *s3.Client, bucket, key string, data []byte) error {
+	_, err := s3Client.PutObject(ctx, &s3.PutObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+		Body:   bytes.NewReader(data),
+	})
+
+	return err
+}
+
+func CalculateKZGParam(ctx context.Context, bucket string, droplets []lubyTransform.LTBlock, s3Client *s3.Client) {
 	var allDropletsData []byte
 	for _, droplet := range droplets {
 		allDropletsData = append(allDropletsData, droplet.Data...)
@@ -43,7 +56,7 @@ func CalculateKZGParam(ctx context.Context, bucket string, droplets []lubyTransf
 	}
 
 	// Uplaod roots to S3
-	utils.UploadToS3(ctx, bucket, "kzg-roots.dat", serializedRoots)
+	UploadToS3(ctx, s3Client, bucket, "kzg-roots.dat", serializedRoots)
 
 	p := poly.NewPolynomialWithRootsFromArray(roots)
 
@@ -59,7 +72,7 @@ func CalculateKZGParam(ctx context.Context, bucket string, droplets []lubyTransf
 	}
 
 	// Upload TrustedSetup to S3
-	utils.UploadToS3(ctx, bucket, "trusted_setup.dat", serializedTS)
+	UploadToS3(ctx, s3Client, bucket, "trusted_setup.dat", serializedTS)
 
 	// Generate commitments
 	c := kzg.Commit(ts, p.Coefficients)
@@ -69,7 +82,7 @@ func CalculateKZGParam(ctx context.Context, bucket string, droplets []lubyTransf
 	}
 
 	// Upload commitments to S3
-	utils.UploadToS3(ctx, bucket, "commitments.dat", serializedCommitments)
+	UploadToS3(ctx, s3Client, bucket, "commitments.dat", serializedCommitments)
 
 	var proofs []*bn256.G1
 	for _, root := range roots {
@@ -89,7 +102,7 @@ func CalculateKZGParam(ctx context.Context, bucket string, droplets []lubyTransf
 	}
 
 	// Upload proofs to S3
-	utils.UploadToS3(ctx, bucket, "proofs.dat", serializedProofs)
+	UploadToS3(ctx, s3Client, bucket, "proofs.dat", serializedProofs)
 
 }
 

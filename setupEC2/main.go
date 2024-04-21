@@ -30,7 +30,7 @@ func init() {
 }
 
 func main() {
-	ctx := context.Background()
+	ctx := context.TODO()
 
 	// Here you need to configure your event manually or simulate one
 	event := utils.StartSignal{
@@ -41,9 +41,7 @@ func main() {
 		RequestedBlocks: []int{1, 2, 3}, // Sample requested blocks
 	}
 
-	cfg, err := config.LoadDefaultConfig(context.TODO(),
-		config.WithRegion("us-west-1"),
-	)
+	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion("us-west-1"))
 	if err != nil {
 		log.Fatalf("Unable to load SDK config, %v", err)
 	}
@@ -106,11 +104,12 @@ func main() {
 }
 
 // uploadToS3 uploads a byte slice to an S3 bucket under the specified key
-func uploadToS3(ctx context.Context, client *s3.Client, bucket, key string, data []byte) error {
-	_, err := client.PutObject(ctx, &s3.PutObjectInput{
+func uploadToS3(ctx context.Context, s3Client *s3.Client, bucket, key string, data []byte) error {
+	_, err := s3Client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 		Body:   bytes.NewReader(data),
 	})
+
 	return err
 }
