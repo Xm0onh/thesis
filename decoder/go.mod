@@ -13,6 +13,13 @@ require (
 )
 
 require (
+	github.com/bits-and-blooms/bitset v1.10.0 // indirect
+	github.com/consensys/bavard v0.1.13 // indirect
+	github.com/mmcloughlin/addchain v0.4.0 // indirect
+	rsc.io/tmplfunc v0.0.3 // indirect
+)
+
+require (
 	github.com/arnaucube/kzg-commitments-study v0.0.0-20210807183319-2e62793fd64e // indirect
 	github.com/aws/aws-sdk-go v1.51.20 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.2 // indirect
@@ -35,6 +42,7 @@ require (
 	github.com/aws/smithy-go v1.20.2 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
 	github.com/cbergoon/merkletree v0.2.0 // indirect
+	github.com/consensys/gnark-crypto v0.12.1
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
 	github.com/ethereum/go-ethereum v1.13.14 // indirect
 	github.com/georgercarder/polynomial v0.0.2 // indirect
