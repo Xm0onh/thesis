@@ -4,7 +4,7 @@ go 1.22.1
 
 require (
 	github.com/aws/aws-sdk-go v1.51.25
-	github.com/xm0onh/thesis v0.4.3
+	github.com/xm0onh/thesis v0.4.4
 )
 
 require (
