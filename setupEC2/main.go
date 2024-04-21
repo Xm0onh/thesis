@@ -17,6 +17,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 
 	blockchainPkg "github.com/xm0onh/thesis/packages/blockchain"
+	"github.com/xm0onh/thesis/packages/kzg"
 	lubyTransform "github.com/xm0onh/thesis/packages/luby"
 	utils "github.com/xm0onh/thesis/packages/utils"
 )
@@ -78,8 +79,8 @@ func main() {
 		Message:         message,
 	}
 
-	utils.GenerateDroplet(SetupParameters)
-	// kzg.CalculateKZGParam(ctx, bucketName, droplets)
+	var droplets = utils.GenerateDroplet(SetupParameters)
+	kzg.CalculateKZGParam(ctx, bucketName, droplets, s3Client)
 
 	_, err = ddbClient.PutItem(ctx, &dynamodb.PutItemInput{
 		TableName: aws.String(tableName),
