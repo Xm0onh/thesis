@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -39,10 +40,11 @@ func main() {
 		RequestedBlocks: []int{1, 2, 3}, // Sample requested blocks
 	}
 
-	cfg, err := config.LoadDefaultConfig(ctx)
+	cfg, err := config.LoadDefaultConfig(context.TODO(),
+		config.WithRegion("us-west-1"),
+	)
 	if err != nil {
-		fmt.Printf("failed to load AWS configuration: %v\n", err)
-		return
+		log.Fatalf("Unable to load SDK config, %v", err)
 	}
 
 	ddbClient := dynamodb.NewFromConfig(cfg)
