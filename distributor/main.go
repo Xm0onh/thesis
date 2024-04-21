@@ -73,8 +73,8 @@ func handler(ctx context.Context, event StartEvent) {
 	}
 
 	fmt.Println("Starting the distribution")
-	totalResponders := 50
-	totalRange := 1200
+	totalResponders := 1
+	totalRange := 410
 	intervalSize := totalRange / totalResponders
 	// batchSize := 25
 

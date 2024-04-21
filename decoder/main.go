@@ -72,7 +72,15 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) (bool, error) {
 	param := utils.SetupParameters{}
 	param.DegreeCDF, param.SourceBlocks, param.EncodedBlockIDs, param.RandomSeed, param.NumberOfBlocks, _, param.MessageSize, _ = utils.PullDataFromSetup(ctx, setupTableName)
 	fmt.Printf("Downloaded %d LTBlocks.\n", len(Droplets))
-
+	// Decoding the blocks
+	startTime := time.Now()
+	utils.Decoder(Droplets, param)
+	fmt.Println("Successfully Decoded the blocks.")
+	fmt.Println("Time to decode: ", time.Since(startTime))
+	// verification
+	startTime = time.Now()
+	kzg.Verification(ctx, bucketName)
+	fmt.Println("Time to verify: ", time.Since(startTime))
 	/// Submit the time to the time keeper table
 	_, err := ddbClient.PutItem(ctx, &dynamodb.PutItemInput{
 		TableName: aws.String(timeKeeperTable),
@@ -86,16 +94,6 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) (bool, error) {
 		return false, err
 	}
 	//decoder
-
-	// Decoding the blocks
-	startTime := time.Now()
-	utils.Decoder(Droplets, param)
-	fmt.Println("Successfully Decoded the blocks.")
-	fmt.Println("Time to decode: ", time.Since(startTime))
-	// verification
-	startTime = time.Now()
-	kzg.Verification(ctx, bucketName)
-	fmt.Println("Time to verify: ", time.Since(startTime))
 
 	return true, nil
 }
