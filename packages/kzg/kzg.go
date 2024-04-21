@@ -47,14 +47,6 @@ func CalculateKZGParam(ctx context.Context, bucket string, droplets []lubyTransf
 
 	p := poly.NewPolynomialWithRootsFromArray(roots)
 
-	serializedPolynomial, err := SerializePolynomial(p.Coefficients)
-	if err != nil {
-		log.Fatalf("Failed to serialize polynomial: %v", err)
-	}
-
-	// Upload polynomial to S3
-	utils.UploadToS3(ctx, bucket, "polynomial.dat", serializedPolynomial)
-
 	// Generate TrustedSetup
 	ts, err := kzg.NewTrustedSetup(len(p.Coefficients))
 	if err != nil {

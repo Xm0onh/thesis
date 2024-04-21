@@ -16,6 +16,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 
 	blockchainPkg "github.com/xm0onh/thesis/packages/blockchain"
+	kzg "github.com/xm0onh/thesis/packages/kzg"
 	lubyTransform "github.com/xm0onh/thesis/packages/luby"
 	utils "github.com/xm0onh/thesis/packages/utils"
 )
@@ -23,6 +24,7 @@ import (
 var setupTableName = os.Getenv("SETUP_DB")
 var tableName = os.Getenv("DDB_TABLE_NAME")
 var timeKeeperTable = os.Getenv("TIME_KEEPER_TABLE")
+var bucketName = os.Getenv("BLOCKCHAIN_S3_BUCKET")
 
 var Droplets []lubyTransform.LTBlock
 var ddbClient *dynamodb.Client
@@ -83,7 +85,18 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) (bool, error) {
 		fmt.Printf("Failed to submit time to time keeper table: %v\n", err)
 		return false, err
 	}
+	//decoder
+
+	// Decoding the blocks
+	startTime := time.Now()
+	utils.Decoder(Droplets, param)
 	fmt.Println("Successfully Decoded the blocks.")
+	fmt.Println("Time to decode: ", time.Since(startTime))
+	// verification
+	startTime = time.Now()
+	kzg.Verification(ctx, bucketName)
+	fmt.Println("Time to verify: ", time.Since(startTime))
+
 	return true, nil
 }
 

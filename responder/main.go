@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	blockchainPkg "github.com/xm0onh/thesis/packages/blockchain"
 	utils "github.com/xm0onh/thesis/packages/utils"
@@ -41,7 +42,10 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) error {
 		fmt.Printf("Failed to pull data from setup: %v\n", err)
 		return err
 	}
+	startTime := time.Now()
 	param.Message, _ = utils.DownloadFromS3(ctx, bucketName, "blockchain_data")
+	fmt.Println("Time to download blockchain data: ", time.Since(startTime))
+
 	ddbClient := dynamodb.NewFromConfig(cfg)
 	for _, record := range snsEvent.Records {
 		var dropletReq utils.RequestedDroplets

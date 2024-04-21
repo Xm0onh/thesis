@@ -242,7 +242,7 @@ func Decoder(Droplets []lubyTransform.LTBlock, param SetupParameters) ([]blockch
 			// Convert blockchain bytes to a Blocks object.
 			decodedBlocks := ByteToBlock(decodedMessage)
 			// size of decodedBlockchain
-			fmt.Println("Decoded blockchain: ", decodedBlocks)
+			fmt.Println("Decoded blockchain: ", len(*decodedBlocks))
 			return *decodedBlocks, nil
 
 		} else {
