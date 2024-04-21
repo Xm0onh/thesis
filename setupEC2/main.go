@@ -103,7 +103,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("Process completed successfully!")
+	fmt.Println("Process completed successfully !")
 }
 
 // uploadToS3 uploads a byte slice to an S3 bucket under the specified key
