@@ -32,14 +32,19 @@ func init() {
 
 func main() {
 	ctx := context.TODO()
+	var requestedBlocks []int
+
+	for i := 0; i < 9999; i++ {
+		requestedBlocks = append(requestedBlocks, i)
+	}
 
 	// Here you need to configure your event manually or simulate one
 	event := utils.StartSignal{
 		Start:           true,
-		SourceBlocks:    100,            // Set appropriately
-		EncodedBlockIDs: 10,             // Set appropriately
-		NumberOfBlocks:  50,             // Set appropriately
-		RequestedBlocks: []int{1, 2, 3}, // Sample requested blocks
+		SourceBlocks:    10000,
+		EncodedBlockIDs: 15000,
+		NumberOfBlocks:  10000,
+		RequestedBlocks: requestedBlocks,
 	}
 
 	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion("us-west-1"))
