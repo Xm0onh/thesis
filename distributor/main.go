@@ -74,7 +74,7 @@ func handler(ctx context.Context, event StartEvent) {
 
 	fmt.Println("Starting the distribution")
 	totalResponders := 50
-	totalRange := 600
+	totalRange := 1200
 	intervalSize := totalRange / totalResponders
 	// batchSize := 25
 
@@ -89,8 +89,8 @@ func handler(ctx context.Context, event StartEvent) {
 	var wg sync.WaitGroup
 	// semaphore := make(chan struct{}, batchSize)
 
-	for i := 1; i <= totalResponders; i++ {
-		responderEnv := fmt.Sprintf("RESPONDER_%d", i)
+	for i := 0; i < totalResponders; i++ {
+		responderEnv := fmt.Sprintf("RESPONDER_%d", i+1)
 		topicArn := os.Getenv(responderEnv)
 		if topicArn == "" {
 			fmt.Printf("Environment variable %s is not set\n", responderEnv)

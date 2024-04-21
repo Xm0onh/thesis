@@ -12,6 +12,7 @@ require (
 )
 
 require (
+	github.com/arnaucube/kzg-commitments-study v0.0.0-20210807183319-2e62793fd64e
 	github.com/aws/aws-sdk-go-v2 v1.26.1 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.2 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.13.43 // indirect
@@ -31,6 +32,7 @@ require (
 	github.com/aws/smithy-go v1.20.2 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
+	github.com/georgercarder/polynomial v0.0.2
 	github.com/holiman/uint256 v1.2.4 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	golang.org/x/crypto v0.17.0 // indirect

@@ -16,6 +16,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 
 	blockchainPkg "github.com/xm0onh/thesis/packages/blockchain"
+	kzg "github.com/xm0onh/thesis/packages/kzg"
 	lubyTransform "github.com/xm0onh/thesis/packages/luby"
 	utils "github.com/xm0onh/thesis/packages/utils"
 )
@@ -62,6 +63,20 @@ func Handler(ctx context.Context, event utils.StartSignal) (string, error) {
 	if err != nil {
 		return "Failed to upload message to S3", err
 	}
+
+	var SetupParameters = utils.SetupParameters{
+		DegreeCDF:       degreeCDF,
+		RandomSeed:      seed,
+		SourceBlocks:    sourceBlocks,
+		EncodedBlockIDs: encodedBlockIDs,
+		NumberOfBlocks:  event.NumberOfBlocks,
+		MessageSize:     messageSize,
+		Message:         message,
+	}
+
+	droplets := utils.GenerateDroplet(SetupParameters)
+	kzg.CalculateKZGParam(ctx, bucketName, droplets)
+
 	// Add MessageSize into the Database
 	_, err = ddbClient.PutItem(ctx, &dynamodb.PutItemInput{
 		TableName: aws.String(tableName),
