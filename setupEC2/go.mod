@@ -28,8 +28,13 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.23.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.28.6 // indirect
 	github.com/aws/smithy-go v1.20.2 // indirect
+	github.com/bits-and-blooms/bitset v1.10.0 // indirect
+	github.com/consensys/bavard v0.1.13 // indirect
+	github.com/consensys/gnark-crypto v0.12.1 // indirect
 	github.com/georgercarder/polynomial v0.0.2 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/mmcloughlin/addchain v0.4.0 // indirect
+	rsc.io/tmplfunc v0.0.3 // indirect
 )
 
 require (
