@@ -95,7 +95,9 @@ func Handler(ctx context.Context, snsEvent events.SNSEvent) (bool, error) {
 		fmt.Printf("Failed to pull KZG data: %v\n", err)
 		return false, err
 	}
+	startTime = time.Now()
 	fmt.Println(Verifier(digest, proof, point, &srs.Vk))
+	fmt.Println("Time to verify: ", time.Since(startTime))
 
 	/// Submit the time to the time keeper table
 	_, err = ddbClient.PutItem(ctx, &dynamodb.PutItemInput{
