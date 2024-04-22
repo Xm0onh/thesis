@@ -386,6 +386,8 @@ github.com/xm0onh/thesis v0.2.8-0.20240414215154-c6405780f6d3 h1:9eCXxZRQEUaUXBd
 github.com/xm0onh/thesis v0.2.8-0.20240414215154-c6405780f6d3/go.mod h1:ZYiNqLzwBrJpCx0sdPwfoN0WlRQqHsyVg8MynoHSjl4=
 github.com/xm0onh/thesis v0.4.1 h1:hwZS/ne0bTu7PiO7kEhZyJlFC2lYvFUZvv7Igx5ziP0=
 github.com/xm0onh/thesis v0.4.1/go.mod h1:IuCNW/n9M8sEisWZHcoIxu2w7l6Xe+T//nPFuMGeihY=
+github.com/xm0onh/thesis v0.4.4 h1:XPZRaP+iWb8qGqJOBRDZ7iLJpOoT8unO244hoeYTzu4=
+github.com/xm0onh/thesis v0.4.4/go.mod h1:IuCNW/n9M8sEisWZHcoIxu2w7l6Xe+T//nPFuMGeihY=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=

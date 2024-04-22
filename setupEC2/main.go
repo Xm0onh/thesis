@@ -51,7 +51,7 @@ func main() {
 	event := utils.StartSignal{
 		Start:           true,
 		SourceBlocks:    1000,
-		EncodedBlockIDs: 1500,
+		EncodedBlockIDs: 2000,
 		NumberOfBlocks:  1000,
 		RequestedBlocks: requestedBlocks,
 	}
@@ -68,7 +68,7 @@ func main() {
 	degreeCDFString, _ := json.Marshal(degreeCDF)
 
 	seed := time.Now().UnixNano()
-	blockchain := utils.InitializeBlockchain(event.NumberOfBlocks, 1500)
+	blockchain := utils.InitializeBlockchain(event.NumberOfBlocks, 1000)
 
 	message, messageSize, err := utils.CalculateMessageAndMessageSize(*blockchain, event.RequestedBlocks)
 	if err != nil {
